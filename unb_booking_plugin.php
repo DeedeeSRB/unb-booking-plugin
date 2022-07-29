@@ -12,9 +12,29 @@
  License: GPLv2 or later 
  Text Domain: unb-booking-plugin
  */
+if ( ! defined( 'ABSPATH' ) ) {
+    die;
+}
+
+define( 'UNB_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'UNB_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'UNB_PLUGIN_NAME', plugin_basename( __FILE__ ));
 define( 'UNB_BOOKING', __FILE__ );
+
 /**
- * Include the Elementor_Awesomesauce class.
+ * Include the UNB Booking System class.
  */
-require plugin_dir_path( UNB_BOOKING ) . 'class-unb-booking-system.php';
+require UNB_PLUGIN_PATH . 'class-unb-booking-system.php';
+
+/**
+ * Include the UNB Booking Initializer class.
+ */
+require UNB_PLUGIN_PATH . 'inc/init.php';
+
+/**
+ * Initialize the plugin
+ */
+$init = new Init();
+$init->register_services();
+
 
