@@ -3,7 +3,7 @@
  * Admin class.
  *
  * @category   Class
- * @package    UnbBooking
+ * @package    UNBBookingPlugin
  * @subpackage WordPress
  * @author     Unbelievable Digital
  * @copyright  2022 Unbelievable Digital
@@ -19,8 +19,8 @@
 /**
  * UNB Booking Plugin Admin Class
  *
- * Responsible to create admin pages, subpages, and custom forms using SettingsApi.
- * Callbacks should be included in AdminCallbacks.php file.
+ * Responsible to create admin pages, subpages, and custom forms data and setting them in SettingsApi.
+ * Callbacks for the pages and custom fields should be included in AdminCallbacks.php file.
  * 
  */
 class Admin
@@ -34,24 +34,7 @@ class Admin
 	public $settings;
 
 	/**
-	 * Admin pages
-	 *
-	 * @since 1.0.0
-	 * @var array Array to keep track of all admin pages
-	 */
-	public $pages = array();
-
-	/**
-	 * SubAdmin pages
-	 *
-	 * @since 1.0.0
-	 * @var array Array to keep track of all the subpages of the admin pages
-	 */
-	public $subpages = array();
-
-	/**
-	 * Register admin pages and subpages in the SettingsApi.php file.
-	 * Call functions to set forms settings in the SettingsApi.php file.
+	 * Set admin pages, subpages, and forms for the admin panel in the SettingsApi.php file and then register them.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -63,18 +46,18 @@ class Admin
 		$this->settings = new SettingsApi();
 
 		$this->setPages();
+		$this->settings->withSubPage( 'General' );
 		$this->setSubpages();
 
 		$this->setSettings();
 		$this->setSections();
 		$this->setFields();
 
-		$this->settings->addPages( $this->pages )->withSubPage( 'Dashboard' )->addSubPages( $this->subpages )->register();
-		//$this->settings->addPages( $this->pages )->register();
+		$this->settings->register();
 	}
 
 	/**
-	 * Setting the admin pages to the pages array
+	 * Setting the admin pages for the SettingsApi
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -82,7 +65,7 @@ class Admin
 	public function setPages() 
 	{
 		require UNB_PLUGIN_PATH . 'inc/Api/AdminCallbacks.php';
-		$this->pages = array(
+		$pages = array(
 			array(
 				'page_title' => 'UNB Booking Plugin', 
 				'menu_title' => 'UNB Booking', 
@@ -93,6 +76,8 @@ class Admin
 				'position' => 58
 			)
 		);
+
+		$this->settings->setPages( $pages );
 	}
 
 	/**
@@ -103,7 +88,7 @@ class Admin
 	 */
 	public function setSubpages() 
 	{
-		$this->subpages = array(
+		$subpages = array(
 			array(
 				'parent_slug' => 'unb_booking_plugin', 
 				'page_title' => 'UNB Booking Settings', 
@@ -113,6 +98,8 @@ class Admin
 				'callback' => array( 'AdminCallbacks', 'adminSettings' )
 			)
 		);
+
+		$this->settings->setSubPages( $subpages );
 	}
 
 	/**

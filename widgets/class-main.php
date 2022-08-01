@@ -3,7 +3,7 @@
  * UnbBooking class.
  *
  * @category   Class
- * @package    UnbBooking
+ * @package    UNBBookingPlugin
  * @subpackage WordPress
  * @author     Unbelievable Digital
  * @copyright  2022 Unbelievable Digital

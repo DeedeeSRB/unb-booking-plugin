@@ -13,9 +13,11 @@ final class Init
 	public static function get_services() 
 	{
 		require plugin_dir_path( UNB_BOOKING ) . '/inc/Admin/Admin.php';
+		require plugin_dir_path( UNB_BOOKING ) . '/inc/Admin/CPTAdmin.php';
 
 		return [
 			Admin::class,
+			CPTAdmin::class,
 		];
 	}
 

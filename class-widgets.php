@@ -3,14 +3,13 @@
  * Widgets class.
  *
  * @category   Class
- * @package    ElementorMsj
+ * @package    UNBBookingPlugin
  * @subpackage WordPress
- * @author     Ben Marshall <me@benmarshall.me>
- * @copyright  2020 Ben Marshall
+ * @author     Unbelievable Digital
+ * @copyright  2022 Unbelievable Digital
  * @license    https://opensource.org/licenses/GPL-3.0 GPL-3.0-only
- * @link       link(https://www.benmarshall.me/build-custom-elementor-widgets/,
- *             Build Custom Elementor Widgets)
- * @since      1.0.2
+ * @link       https://unbelievable.digital/
+ * @since      1.0.0
  * php version 7.3.9
  */
 
