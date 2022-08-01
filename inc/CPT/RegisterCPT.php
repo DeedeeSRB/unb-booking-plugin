@@ -27,18 +27,30 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @var array Array to keep track of all custom post types
 	 */
-    public $custom_post_types = array();
+    public $customPostTypes = array();
+
+    /**
+	 * Meta boxes for the custom post types
+	 *
+	 * @since 1.0.0
+	 * @var array Array to keep track of all custom posts meta data
+	 */
+    public $metaBoxes = array();
     
     /**
-	 * Call a function to register custom post types if they are not empty.
+	 * Call a function to register custom post types and their meta boxes if they are not empty.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
     public function register() {
-        if ( ! empty($this->custom_post_types) ) {
+        if ( ! empty($this->customPostTypes) ) {
             add_action('init', array( $this, 'registerCPTs' ) );
         }
+        if ( ! empty($this->metaBoxes) ) {
+            add_action( 'add_meta_boxes', array( $this, 'registerCPTMetaBoxes' ) );
+        }
+        
     }
 
     /**
@@ -48,7 +60,7 @@ class RegisterCPT
 	 * @access public
 	 */
     public function registerCPTs() {
-        foreach ( $this->custom_post_types as $cpt ) {
+        foreach ( $this->customPostTypes as $cpt ) {
 		
             $supports = $cpt['supports'];
 
@@ -65,15 +77,44 @@ class RegisterCPT
     }
 
     /**
+	 * Register all custom post types meta boxex.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+    public function registerCPTMetaBoxes() {
+        foreach ( $this->metaBoxes as $metaBox) {
+            add_meta_box( 
+                $metaBox['id'],
+                $metaBox['title'],
+                ( isset( $metaBox['callback'] ) ? $metaBox['callback'] : '' ),
+                $metaBox['screen'],
+                ( isset( $metaBox['context'] ) ? $metaBox['context'] : 'advanced' ),
+                ( isset( $metaBox['priority'] ) ? $metaBox['priority'] : 'default' ),
+                ( isset( $metaBox['callback_args'] ) ? $metaBox['callback_args'] : null )
+            );
+        }
+    }
+
+    /**
 	 * Set custom post types array
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
     public function setCPTs($cpt) {
-        $this->custom_post_types = array_merge( $this->custom_post_types, $cpt );
-
+        $this->customPostTypes = array_merge( $this->customPostTypes, $cpt );
 		return $this;
     }
 
+    /**
+	 * Set custom post types meta boxes array
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+    public function setCPTMetas($metas) {
+        $this->metaBoxes = array_merge( $this->metaBoxes, $metas );
+		return $this;
+    }
 }

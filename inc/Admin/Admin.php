@@ -64,7 +64,7 @@ class Admin
 	 */
 	public function setPages() 
 	{
-		require UNB_PLUGIN_PATH . 'inc/Api/AdminCallbacks.php';
+		require UNB_PLUGIN_PATH . 'inc/Callbacks/AdminCallbacks.php';
 		$pages = array(
 			array(
 				'page_title' => 'UNB Booking Plugin', 
@@ -147,7 +147,6 @@ class Admin
 	 */
 	public function setFields()
 	{
-		//require UNB_PLUGIN_PATH . 'inc/Api/AdminCallbacks.php';
 		$args = array(
 			array(
 				'id' => 'entry_1',
