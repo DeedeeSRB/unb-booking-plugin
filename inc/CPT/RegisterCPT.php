@@ -128,7 +128,7 @@ class RegisterCPT
             add_meta_box( 
                 $metaBox['id'],
                 $metaBox['title'],
-                ( isset( $metaBox['callback'] ) ? $metaBox['callback'] : '' ),
+                $metaBox['callback'],
                 $metaBox['screen'],
                 ( isset( $metaBox['context'] ) ? $metaBox['context'] : 'advanced' ),
                 ( isset( $metaBox['priority'] ) ? $metaBox['priority'] : 'default' ),

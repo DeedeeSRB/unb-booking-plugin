@@ -92,6 +92,16 @@ class CPTAdmin
     public function setCPTMetas() {
         require UNB_PLUGIN_PATH . 'inc/Callbacks/CPTMetaCallbacks.php';
 
+        /**
+         *  The fields array of any meta box will hold all the fields that should be displayed in that meta box.
+         *  These fields can take the attributes 'id', 'label', 'type', 'place_holder', and 'columnName'.
+         *      Required fields: 'id' and 'label'
+         *      Constraints: 'id' should be unique for each field
+         *      Default values: -
+         *          'type' => 'text'
+         *          'columnName' => label
+         *          'place_holder' => ''
+         */
         $roomMetaFields = array(
             array(
                 'id' => 'room_price',
@@ -115,6 +125,23 @@ class CPTAdmin
             ),
         ); 
 
+        /**
+         *  The metaBoxes array will hold all the meta boxes that should be displayed for a specific CPT.
+         *  These metaBoxes can take the attributes 'id', 'title', 'callback', 'screen', 'context', 'priority', and 'callback_args'.
+         *  The 'callback_args' attribute can take 'nonce', 'fields', and 'unsetColumns'.
+         *      Required fields: 'id', 'title', 'callback', 'screen', and 'nonce'
+         *      Constraints: 
+         *          'id' should be unique for each metaBox.
+         *          'title'
+         *          'callback' callback methods should be createed in the CPTMetaCallbacks class or use the defualt method 'postBox'.
+         *          'screen' this should be the same as the post type you want it to be for
+         *          'nonce' this should be unique 
+         *      Default values:
+         *          'context' => 'advanced'
+         *          'priority' => 'default'
+         *          'fields' => null
+         *          'unsetColumns' => null
+         */
         $metaBoxes = array(
             array(
                 'id' => 'room_content_box',
