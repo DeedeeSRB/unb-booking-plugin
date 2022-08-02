@@ -59,7 +59,10 @@ class RegisterCPT
             add_action( 'add_meta_boxes', array( $this, 'registerCPTMetaBoxes' ) );
         }
         if ( ! empty($this->metaFields) ) {
-            add_action( 'save_post', array( $this, 'save_custom_posts' ), 20, 2 );
+            add_action( 'save_post', array( $this, 'saveCustomPosts' ), 10, 2 );
+            add_action( 'manage_posts_custom_column' , array( $this, 'customDisplayColumns' ), 10, 2 );
+            add_filter( 'manage_posts_columns', array( $this, 'customColumnsList' ), 10, 2 );
+            
         }
     }
 
@@ -140,7 +143,7 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public function save_custom_posts( $post_id, $post ) {
+    public function saveCustomPosts( $post_id, $post ) {
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 
         if ( !wp_verify_nonce( $_POST[$post->post_type . '_box_nonce'], UNB_PLUGIN_NAME ) ) return;
@@ -152,7 +155,36 @@ class RegisterCPT
             $fieldToUpdate = $_POST[$metaField['id']];
             update_post_meta( $post_id, $metaField['id'], $fieldToUpdate );
         }
-       
+    }
+
+    /**
+	 * Filter the columns of all custom post types metas.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+    public function customColumnsList( $columns, $post_type ) {
+        
+        $columnData = $this->metaColumns[$post_type];
+        foreach( $columnData['unset'] as $unset ) {
+            unset( $columns[$unset] );
+        }
+
+        foreach( $columnData['columnNames'] as $id => $name ) {
+            $columns[$id] = __( $name );
+        }
+
+        return $columns;
+    }
+
+    /**
+	 * Display the columns data of all custom post types metas.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+    public function customDisplayColumns( $column, $post_id ) {
+        echo get_post_meta( $post_id , $column , true );
     }
 
     /**
@@ -174,13 +206,22 @@ class RegisterCPT
 	 */
     public function setCPTMetas($metaBoxes) {
 
-        // Setting the meta fields
-        foreach ( $metaBoxes as $metaBox ) {
-            $this->metaFields[$metaBox['screen']] = $metaBox['callback_args']['fields'];
-        }
-
         // Setting the meta boxes
         $this->metaBoxes = array_merge( $this->metaBoxes, $metaBoxes );
+
+        foreach ( $metaBoxes as $metaBox ) {
+            // Setting the meta fields
+            $this->metaFields[$metaBox['screen']] = $metaBox['callback_args']['fields'];
+
+            // Setting columns for the CPT for the new meta data
+            foreach ( $metaBox['callback_args']['fields'] as $field ) {
+                $this->metaColumns[$metaBox['screen']]['columnNames'][$field['id']] = isset($field['columnName']) ? $field['columnName'] : $field['label'];
+            } 
+
+            // Unsetting any default columns
+            $this->metaColumns[$metaBox['screen']]['unset'] = $metaBox['callback_args']['unsetColumns'];
+        }
+
 		return $this;
     }
 }

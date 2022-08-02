@@ -74,8 +74,8 @@ class CPTAdmin
                 'args' => array(
                     'public' => true,
                     'has_archive' => true,
-                    'hierarchical' => true,
-                    //'taxonomies' => array( 'post_tags' ),
+                    //'hierarchical' => true, // IF ITS TRUE THE TABLE WON'T BE FILLED 
+                    //'taxonomies' => array( 'categories' ),
                 )
             )
         );
@@ -96,26 +96,22 @@ class CPTAdmin
             array(
                 'id' => 'room_price',
                 'label' => 'Price',
-                'type' => 'text',
                 'place_holder' => 'Enter a price',
             ),
             array(
                 'id' => 'room_max_num_vis',
                 'label' => 'Maximum number of visitors',
-                'type' => 'text',
-                'place_holder' => '',
+                'columnName' => 'Max. No. of visitors'
             ),
             array(
                 'id' => 'room_min_booking_days',
                 'label' => 'Minumum booking days',
-                'type' => 'text',
-                'place_holder' => '',
+                'columnName' => 'Min. booking days'
             ),
             array(
                 'id' => 'room_amenities',
                 'label' => 'Amenties',
                 'type' => 'textarea',
-                'place_holder' => '',
             ),
         ); 
 
@@ -129,7 +125,8 @@ class CPTAdmin
                 'priority' => 'high',
                 'callback_args' => array(
                     'nonce' =>  'room_box_nonce',
-                    'fields' => $roomMetaFields
+                    'fields' => $roomMetaFields,
+                    'unsetColumns' => array('date')
                 )
             ),
         );

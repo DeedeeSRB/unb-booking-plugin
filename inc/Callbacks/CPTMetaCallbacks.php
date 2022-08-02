@@ -28,11 +28,11 @@ class CPTMetaCallbacks
             $value = get_post_meta( $post_args->ID, $field['id'], true);
             echo '<div>';
                 echo '<label for="' . $field['id'] . '">' . $field['label'] . '</label>';
-                if ( $field['type'] == 'text' ) {
-                    echo '<div><input type="text" class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $field['place_holder'] . '" value="' .  $value . '"/></div>';    
-                }
-                else if ( $field['type'] == 'textarea' ) {
+                if ( $field['type'] == 'textarea' ) {
                     echo '<div><textarea class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $field['place_holder'] . '" >' .  $value . '</textarea></div>';
+                }
+                else {
+                    echo '<div><input type="text" class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $field['place_holder'] . '" value="' .  $value . '"/></div>';    
                 }
             echo '</div>';
         }
