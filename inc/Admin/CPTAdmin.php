@@ -30,7 +30,7 @@ class CPTAdmin
 	public $registerCPT;
 
     /**
-	 * Call function to set custom post types and their meta boxes in the RegisterCPT.php file and then register them.
+	 * Call function to set custom post types and their meta fields and boxes in the RegisterCPT.php file and then register them.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -57,32 +57,25 @@ class CPTAdmin
         $cpts = array(
             array(
                 'supports' => array(
+                    'title',
+                    'editor', // context
+                    //'author',
+                    'thumbnail', // (featured image, current theme must also support post-thumbnails)
+                    //'excerpt',
+                    //'trackbacks',
+                    //'custom-fields',
+                    //'comments', // also will see comment count balloon on edit screen
+                    //'revisions', // will store revisions 
+                    'page-attributes', // menu order, hierarchical must be true to show Parent option
+                    //'post-formats',
                 ),
-                'labels' => array(
-                    'name'                  => _x( 'Rooms', 'Post type general name' ),
-                    'singular_name'         => _x( 'Room', 'Post type singular name' ),
-                    'menu_name'             => _x( 'Rooms', 'Admin Menu text' ),
-                    'name_admin_bar'        => _x( 'Room', 'Add New on Toolbar' ),
-                    'add_new'               => __( 'Add New' ),
-                    'add_new_item'          => __( 'Add New room' ),
-                    'new_item'              => __( 'New room' ),
-                    'edit_item'             => __( 'Edit room' ),
-                    'view_item'             => __( 'View room' ),
-                    'all_items'             => __( 'All rooms' ),
-                    'search_items'          => __( 'Search rooms' ),
-                    'parent_item_colon'     => __( 'Parent rooms:' ),
-                    'not_found'             => __( 'No rooms found.' ),
-                    'not_found_in_trash'    => __( 'No rooms found in Trash.' ),
-                    'archives'              => _x( 'Room archives', 'The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4' ),
-                    'insert_into_item'      => _x( 'Insert into room', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4' ),
-                    'uploaded_to_this_item' => _x( 'Uploaded to this room', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4' ),
-                    'filter_items_list'     => _x( 'Filter rooms list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4' ),
-                    'items_list_navigation' => _x( 'Rooms list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4' ),
-                    'items_list'            => _x( 'Rooms list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4' ),
-                ),
+                'name' => 'Rooms',
+                'singular_name' => 'Room',
                 'args' => array(
                     'public' => true,
                     'has_archive' => true,
+                    'hierarchical' => true,
+                    //'taxonomies' => array( 'post_tags' ),
                 )
             )
         );
@@ -91,24 +84,56 @@ class CPTAdmin
     }
 
     /**
-	 * Set custom post types meta boxes in the RegisterCPT.php file.
+	 * Set custom post types meta boxes and fields in the RegisterCPT.php file.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 */
     public function setCPTMetas() {
         require UNB_PLUGIN_PATH . 'inc/Callbacks/CPTMetaCallbacks.php';
-        $metas = array(
+
+        $roomMetaFields = array(
             array(
-                'id' => 'room_price_box',
-                'title' => __( 'Room Price' ),
-                'callback' => array( 'CPTMetaCallbacks', 'roomPrice' ),
+                'id' => 'room_price',
+                'label' => 'Price',
+                'type' => 'text',
+                'place_holder' => 'Enter a price',
+            ),
+            array(
+                'id' => 'room_max_num_vis',
+                'label' => 'Maximum number of visitors',
+                'type' => 'text',
+                'place_holder' => '',
+            ),
+            array(
+                'id' => 'room_min_booking_days',
+                'label' => 'Minumum booking days',
+                'type' => 'text',
+                'place_holder' => '',
+            ),
+            array(
+                'id' => 'room_amenities',
+                'label' => 'Amenties',
+                'type' => 'textarea',
+                'place_holder' => '',
+            ),
+        ); 
+
+        $metaBoxes = array(
+            array(
+                'id' => 'room_content_box',
+                'title' => __( 'Room details' ),
+                'callback' => array( 'CPTMetaCallbacks', 'postBox' ),
                 'screen' => 'room',
-                'context' => 'side',
+                'context' => 'normal',
                 'priority' => 'high',
-            )
+                'callback_args' => array(
+                    'nonce' =>  'room_box_nonce',
+                    'fields' => $roomMetaFields
+                )
+            ),
         );
 
-        $this->registerCPT->setCPTMetas($metas);
+        $this->registerCPT->setCPTMetas($metaBoxes);
     }
 }
