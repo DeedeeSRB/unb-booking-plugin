@@ -192,7 +192,18 @@ class RegisterCPT
 	 * @access public
 	 */
     public static function customDisplayColumns( $column, $post_id ) {
-        echo get_post_meta( $post_id , $column , true );
+        $data = get_post_meta( $post_id , $column , true );
+        error_log($data);
+        if ( isset( $data ) && $data != '' ) {
+            echo $data;
+            return;
+        }
+
+        $post_type = get_post_type( $post_id );
+        $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
+        $option = get_option( $option_name );
+        $data = $option[$column];
+        echo $data . ' (Default value)';        
     }
 
     /**
@@ -227,6 +238,9 @@ class RegisterCPT
 
             // Unsetting any default columns
             RegisterCPT::$metaColumns[$metaBox['screen']]['unset'] = $metaBox['callback_args']['unsetColumns'];
+
+            // Setting option name to get default values for the cpt
+            RegisterCPT::$metaColumns[$metaBox['screen']]['option_name'] = $metaBox['callback_args']['option_name'];
         }
     }
 }

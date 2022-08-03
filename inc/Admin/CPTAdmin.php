@@ -153,7 +153,8 @@ class CPTAdmin
                 'callback_args' => array(
                     'nonce' =>  'room_box_nonce',
                     'fields' => $roomMetaFields,
-                    'unsetColumns' => array('date')
+                    'unsetColumns' => array('date'),
+                    'option_name' => 'room_options'
                 )
             ),
         );

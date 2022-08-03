@@ -163,39 +163,39 @@ class Admin
 				)
 			),
 			array(
-				'id' => 'room_max_no_vis',
+				'id' => 'room_max_num_vis',
 				'title' => 'Maximum number of visitors',
 				'callback' => array( 'AdminCallbacks', 'unbText' ),
 				'page' => 'unb_booking_plugin_settings',
 				'section' => 'unb_booking_plugin_room_section',
 				'args' => array(
-					'label_for' => 'room_max_no_vis',
+					'label_for' => 'room_max_num_vis',
 					'class' => 'regular-text',
 					'place_holder' => 'eg. 3',
 					'option_name' => 'room_options'
 				)
 			),
 			array(
-				'id' => 'room_min_days',
+				'id' => 'room_min_booking_days',
 				'title' => 'Minimum booking days',
 				'callback' => array( 'AdminCallbacks', 'unbText' ),
 				'page' => 'unb_booking_plugin_settings',
 				'section' => 'unb_booking_plugin_room_section',
 				'args' => array(
-					'label_for' => 'room_min_days',
+					'label_for' => 'room_min_booking_days',
 					'class' => 'regular-text',
 					'place_holder' => 'eg. 7',
 					'option_name' => 'room_options'
 				)
 			),
 			array(
-				'id' => 'room_amen',
+				'id' => 'room_amenities',
 				'title' => 'Amemities',
 				'callback' => array( 'AdminCallbacks', 'unbText' ),
 				'page' => 'unb_booking_plugin_settings',
 				'section' => 'unb_booking_plugin_room_section',
 				'args' => array(
-					'label_for' => 'room_amen',
+					'label_for' => 'room_amenities',
 					'class' => 'regular-text',
 					'place_holder' => 'eg. Tv, Internet, Swimming Pool',
 					'option_name' => 'room_options'
