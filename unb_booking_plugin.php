@@ -22,6 +22,12 @@ define( 'UNB_PLUGIN_NAME', plugin_basename( __FILE__ ));
 define( 'UNB_BOOKING', __FILE__ );
 
 /**
+ * Include the UNB Booking Activate class and register the activation hook.
+ */
+require UNB_PLUGIN_PATH . 'inc/Base/Activate.php';
+register_activation_hook( __FILE__, array( 'Activate', 'activate' ) );
+
+/**
  * Include the UNB Booking System class.
  */
 require UNB_PLUGIN_PATH . 'class-unb-booking-system.php';
