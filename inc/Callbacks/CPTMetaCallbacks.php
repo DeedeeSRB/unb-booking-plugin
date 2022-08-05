@@ -26,13 +26,15 @@ class CPTMetaCallbacks
 		wp_nonce_field( UNB_PLUGIN_NAME, $callback_args['args']['nonce'] );
         foreach ( $callback_args['args']['fields'] as $field ) {
             $value = get_post_meta( $post_args->ID, $field['id'], true);
+            $type = isset($field['type']) ? $field['type'] : '';
+            $place_holder = isset($field['place_holder']) ? $field['place_holder'] : '';
             echo '<div>';
                 echo '<label for="' . $field['id'] . '">' . $field['label'] . '</label>';
-                if ( $field['type'] == 'textarea' ) {
-                    echo '<div><textarea class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $field['place_holder'] . '" >' .  $value . '</textarea></div>';
+                if ( $type == 'textarea' ) {
+                    echo '<div><textarea class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $place_holder . '" >' .  $value . '</textarea></div>';
                 }
                 else {
-                    echo '<div><input type="text" class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $field['place_holder'] . '" value="' .  $value . '"/></div>';    
+                    echo '<div><input type="text" class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $place_holder . '" value="' .  $value . '"/></div>';    
                 }
             echo '</div>';
         }
