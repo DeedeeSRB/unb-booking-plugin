@@ -173,14 +173,17 @@ class RegisterCPT
 	 */
     public static function customColumnsList( $columns, $post_type ) {
         
-        $columnData = RegisterCPT::$metaColumns[$post_type];
-        foreach( $columnData['unset'] as $unset ) {
-            unset( $columns[$unset] );
-        }
-
-        foreach( $columnData['columnNames'] as $id => $name ) {
-            $columns[$id] = __( $name );
-        }
+        if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
+            $columnData = RegisterCPT::$metaColumns[$post_type];
+            foreach( $columnData['unset'] as $unset ) {
+                unset( $columns[$unset] );
+            }
+    
+            foreach( $columnData['columnNames'] as $id => $name ) {
+                $columns[$id] = __( $name );
+            }
+        } 
+        
 
         return $columns;
     }
