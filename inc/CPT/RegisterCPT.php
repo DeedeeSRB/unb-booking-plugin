@@ -152,17 +152,22 @@ class RegisterCPT
 	 * @access public
 	 */
     public static function saveCustomPosts( $post_id, $post ) {
-        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+        $post_type = get_post_type( $post_id );
 
-        if ( !wp_verify_nonce( $_POST[$post->post_type . '_box_nonce'], UNB_PLUGIN_NAME ) ) return;
+        if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
+            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 
-        if ( 'page' == $_POST['post_type'] ) if ( !current_user_can( 'edit_page', $post_id ) ) return;
-        else if ( !current_user_can( 'edit_post', $post_id ) ) return;
-        
-        foreach( RegisterCPT::$metaFields[$post->post_type] as $metaField ) {
-            $fieldToUpdate = $_POST[$metaField['id']];
-            update_post_meta( $post_id, $metaField['id'], $fieldToUpdate );
+            if ( !wp_verify_nonce( $_POST[$post->post_type . '_box_nonce'], UNB_PLUGIN_NAME ) ) return;
+
+            if ( 'page' == $_POST['post_type'] ) if ( !current_user_can( 'edit_page', $post_id ) ) return;
+            else if ( !current_user_can( 'edit_post', $post_id ) ) return;
+            
+            foreach( RegisterCPT::$metaFields[$post->post_type] as $metaField ) {
+                $fieldToUpdate = $_POST[$metaField['id']];
+                update_post_meta( $post_id, $metaField['id'], $fieldToUpdate );
+            } 
         }
+
     }
 
     /**
@@ -195,18 +200,24 @@ class RegisterCPT
 	 * @access public
 	 */
     public static function customDisplayColumns( $column, $post_id ) {
-        $data = get_post_meta( $post_id , $column , true );
-        error_log($data);
-        if ( isset( $data ) && $data != '' ) {
-            echo $data;
-            return;
-        }
 
         $post_type = get_post_type( $post_id );
-        $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
-        $option = get_option( $option_name );
-        $data = $option[$column];
-        echo $data . ' (Default value)';        
+
+        if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
+            $data = get_post_meta( $post_id , $column , true );
+            error_log($data);
+            if ( isset( $data ) && $data != '' ) {
+                echo $data;
+                return;
+            }
+            else {
+                
+                $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
+                $option = get_option( $option_name );
+                $data = $option[$column];
+                echo $data . ' (Default value)';
+            }
+        }        
     }
 
     /**
