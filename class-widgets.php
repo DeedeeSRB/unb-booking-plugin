@@ -66,6 +66,7 @@ class Widgets {
 	 */
 	private function include_widgets_files() {
 		require_once 'widgets/class-main.php';
+		require_once 'widgets/class-booking.php';
 	}
 
 	/**
@@ -82,6 +83,7 @@ class Widgets {
 
 		// Register the plugin widget classes.
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\UnbBooking() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\showBookingRooms() );
 	}
 
 	/**

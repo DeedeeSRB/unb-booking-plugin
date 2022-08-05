@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @since 1.0.0
  */
-class UnbBooking extends Widget_Base {
+class showBookingRooms extends Widget_Base {
 	/**
 	 * Class constructor.
 	 *
@@ -54,7 +54,7 @@ class UnbBooking extends Widget_Base {
 	 * @return string Widget name.
 	 */
 	public function get_name() {
-		return 'unb_booking';
+		return 'unb_booking_rooms';
 	}
 	/**
 	 * Retrieve the widget title.
@@ -66,7 +66,7 @@ class UnbBooking extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'UNB Booking', 'unb_booking' );
+		return __( 'UNB Booking Room', 'unb_booking' );
 	}
 	/**
 	 * Retrieve the widget icon.
@@ -150,16 +150,19 @@ class UnbBooking extends Widget_Base {
 	 */
 	protected function render() {
 		$settings = $this->get_settings_for_display();
-		?>
-			<div class="daterangepicker">
-				<div class="input-group">
-                    <div class="input-group-prepend">
-                    	<span class="input-group-text"><i class="far fa-clock"></i></span>
-                    </div>
-                    <input type="text" class="form-control float-right" id="reservationtime">
-				</div>
-			</div>
-		<?php
+		$args = array(
+   			'post_type' => 'room',
+			'post_status' => array('publish'),
+			'posts_per_page' => 6,
+
+		);
+		$query = new \WP_Query( $args );
+		$posts = $query->posts;
+		foreach($posts as $post) {
+			echo $post->post_title;
+			// $img = get_the_post_thumbnail_url( $post->ID, 'post-thumbnail' );
+			?> <img src="<?= $img ?>" alt=""> <?php
+		}
 	}
 	/**
 	 * Render the widget output in the editor.
