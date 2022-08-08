@@ -13,8 +13,8 @@ Rhis widget will allow you to display all your products that can be booked for y
 ### Rooms to-be-booked widget
 
 This widget will allow to display ALL your bookable (currently available or unavailable) rooms.
-##### Options
-Maximum number of rooms in the list (min: 1, max: 100)
+⋅⋅⋅Options
+⋅⋅⋅Maximum number of rooms in the list (min: 1, max: 100)
 
 
 ## Settings
