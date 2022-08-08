@@ -1,6 +1,6 @@
 <?php
 /**
- * UnbBooking class.
+ * ShowBookingProducts class.
  *
  * @category   Class
  * @package    UNBBookingPlugin
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @since 1.0.0
  */
-class showBookingRooms extends Widget_Base {
+class ShowBookingProducts extends Widget_Base {
 	/**
 	 * Class constructor.
 	 *
@@ -58,7 +58,7 @@ class showBookingRooms extends Widget_Base {
 	 * @return string Widget name.
 	 */
 	public function get_name() {
-		return 'unb_booking_rooms';
+		return 'unb_booking_products';
 	}
 	/**
 	 * Retrieve the widget title.
@@ -70,7 +70,7 @@ class showBookingRooms extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'UNB Booking Room', 'unb_booking' );
+		return __( 'UNB Booking Products', 'unb_booking' );
 	}
 	/**
 	 * Retrieve the widget icon.
@@ -82,7 +82,7 @@ class showBookingRooms extends Widget_Base {
 	 * @return string Widget icon.
 	 */
 	public function get_icon() {
-		return 'fa fa-pencil';
+		return 'fas fa-home';
 	}
 	/**
 	 * Retrieve the list of categories the widget belongs to.
@@ -106,14 +106,14 @@ class showBookingRooms extends Widget_Base {
 	 * Enqueue styles.
 	 */
 	public function get_style_depends() {
-		return array( 'unb_booking_style' );
+		return array();
 	}
 
 	/**
 	 * Enqueue script.
 	 */
 	public function get_script_depends() {
-		return array( 'unb_booking_script' );
+		return array();
 	}
 
 	/**
@@ -141,8 +141,8 @@ class showBookingRooms extends Widget_Base {
 				array(
 					'label'   => __( $cpt['name'], 'unb_booking' ),
 					'type'    => Controls_Manager::SWITCHER,
-					'label_on' => esc_html__( 'Show', 'your-plugin' ),
-					'label_off' => esc_html__( 'Hide', 'your-plugin' ),
+					'label_on' => esc_html__( 'Show', 'unb_booking' ),
+					'label_off' => esc_html__( 'Hide', 'unb_booking' ),
 					'return_value' => 'yes',
 					'default' => 'yes',
 				)
@@ -172,7 +172,7 @@ class showBookingRooms extends Widget_Base {
 			$cpt_posts[$cpt['name']] = $query->posts;
 		}
 		
-		return include_once UNB_PLUGIN_PATH . '/templates/booking-widget.php';
+		return include_once UNB_PLUGIN_PATH . '/templates/widgets/booking-widget.php';
 	}
 	/**
 	 * Render the widget output in the editor.

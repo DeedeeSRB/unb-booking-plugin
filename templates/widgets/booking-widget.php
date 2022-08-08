@@ -1,4 +1,3 @@
-
 <nav>
     <div class="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
     <?php
@@ -39,12 +38,12 @@
                         foreach ( $posts as $post) {
                             $img = get_the_post_thumbnail_url( $post->ID, 'post-thumbnail' );
                             ?>
-                                <div class="row my-4 text-start">
-                                    <div class="col">
+                                <div class="row my-4">
+                                    <div class="col text-start">
                                         <a href="<?= $post->guid ?>"><?= esc_html__( $post->post_title ) ?></a>
                                         <div><?= esc_html__( $post->post_content ) ?></div>   
                                     </div>
-                                    <div class="col">
+                                    <div class="col text-center">
                                         <a href="<?= $post->guid ?>"><img src="<?= $img ?>" alt=""></a>
                                     </div>
                                 </div>
@@ -63,12 +62,12 @@
                         foreach ( $posts as $post) {
                             $img = get_the_post_thumbnail_url( $post->ID, 'post-thumbnail' );
                             ?>
-                                <div class="row mb-4 text-start">
-                                    <div class="col">
+                                <div class="row mb-4">
+                                    <div class="col text-start">
                                         <a href="<?= $post->guid ?>"><?= esc_html__( $post->post_title ) ?></a>
                                         <div><?= esc_html__( $post->post_content ) ?></div>   
                                     </div>
-                                    <div class="col">
+                                    <div class="col text-center">
                                         <a href="<?= $post->guid ?>"><img src="<?= $img ?>" alt=""></a>
                                     </div>
                                 </div>
