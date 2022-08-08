@@ -13,6 +13,10 @@
  * php version 7.3.9
  */
 
+namespace UnbBooking\Admin;
+
+use UnbBooking\CPTs\RegisterCPT;
+
  /**
  * UNB Booking Plugin Custom Post Type Admin Class
  *
@@ -37,7 +41,7 @@ class CPTAdmin
 	 */
 	public function register() 
 	{
-        require UNB_PLUGIN_PATH . 'inc/CPT/RegisterCPT.php';
+        require_once UNB_PLUGIN_PATH . 'inc/CPT/RegisterCPT.php';
 		
 		$this->registerCPT = new RegisterCPT();
 
@@ -90,7 +94,7 @@ class CPTAdmin
 	 * @access public
 	 */
     public function setCPTMetas() {
-        require UNB_PLUGIN_PATH . 'inc/Callbacks/CPTMetaCallbacks.php';
+        require_once UNB_PLUGIN_PATH . 'inc/Callbacks/CPTMetaCallbacks.php';
 
         /**
          *  The fields array of any meta box will hold all the fields that should be displayed in that meta box.

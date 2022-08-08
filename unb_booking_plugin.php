@@ -12,6 +12,9 @@
  License: GPLv2 or later 
  Text Domain: unb-booking-plugin
  */
+
+namespace UnbBooking;
+
 if ( ! defined( 'ABSPATH' ) ) {
     die;
 }

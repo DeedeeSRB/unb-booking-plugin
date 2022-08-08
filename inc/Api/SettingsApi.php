@@ -12,7 +12,8 @@
  * @since      1.0.0
  * php version 7.3.9
  */
-//namespace Inc\Api;
+
+namespace UnbBooking\Api;
 
 class SettingsApi
 {

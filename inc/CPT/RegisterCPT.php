@@ -13,6 +13,8 @@
  * php version 7.3.9
  */
 
+namespace UnbBooking\CPTs;
+
  /**
  * UNB Booking Plugin Registering Custom Post Type Class
  *
@@ -61,16 +63,15 @@ class RegisterCPT
 	 */
     public static function register() {
         if ( !empty( RegisterCPT::$customPostTypes ) ) {
-            add_action('init', array( 'RegisterCPT', 'registerCPTs' ) );
+            add_action('init', array( 'UnbBooking\CPTs\RegisterCPT', 'registerCPTs' ) );
         }
         if ( !empty( RegisterCPT::$metaBoxes ) ) {
-            add_action( 'add_meta_boxes', array( 'RegisterCPT', 'registerCPTMetaBoxes' ) );
+            add_action( 'add_meta_boxes', array( 'UnbBooking\CPTs\RegisterCPT', 'registerCPTMetaBoxes' ) );
         }
         if ( !empty( RegisterCPT::$metaFields ) ) {
-            add_action( 'save_post', array( 'RegisterCPT', 'saveCustomPosts' ), 10, 2 );
-            add_action( 'manage_posts_custom_column' , array( 'RegisterCPT', 'customDisplayColumns' ), 10, 2 );
-            add_filter( 'manage_posts_columns', array( 'RegisterCPT', 'customColumnsList' ), 10, 2 );
-            
+            add_action( 'save_post', array( 'UnbBooking\CPTs\RegisterCPT', 'saveCustomPosts' ), 10, 2 );
+            add_action( 'manage_posts_custom_column' , array( 'UnbBooking\CPTs\RegisterCPT', 'customDisplayColumns' ), 10, 2 );
+            add_filter( 'manage_posts_columns', array( 'UnbBooking\CPTs\RegisterCPT', 'customColumnsList' ), 10, 2 );
         }
     }
 

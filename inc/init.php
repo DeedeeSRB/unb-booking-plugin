@@ -2,7 +2,10 @@
 /**
  * @package  UNBBookingPlugin
  */
-//namespace Inc;
+namespace UnbBooking;
+
+use UnbBooking\Admin\Admin;
+use UnbBooking\Admin\CPTAdmin;
 
 final class Init
 {

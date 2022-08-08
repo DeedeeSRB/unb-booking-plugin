@@ -13,8 +13,12 @@
  * php version 7.3.9
  */
 namespace UnbBooking\Widgets;
+
+use UnbBooking\CPTs\RegisterCPT;
+
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
+
 // Security Note: Blocks direct access to the plugin PHP files.
 defined( 'ABSPATH' ) || die();
 /**
@@ -125,9 +129,28 @@ class showBookingRooms extends Widget_Base {
 		$this->start_controls_section(
 			'section_content',
 			array(
-				'label' => __( 'UNB Booking', 'unb_booking' ),
+				'label' => __( 'UNB Booking Products', 'unb_booking' ),
 			)
 		);
+
+		//require_once UNB_PLUGIN_PATH . 'inc/CPT/RegisterCPT.php';
+
+		// $reg = new RegisterCPT();
+		// echo();
+		// foreach ( RegisterCPT::$customPostTypes as $cpt ) {
+		// 	$this->add_control(
+		// 		$cpt['singular_name'],
+		// 		array(
+		// 			'label'   => __( $cpt['singular_name'], 'unb_booking' ),
+		// 			'type'    => Controls_Manager::SWITCHER,
+		// 			'label_on' => esc_html__( 'Show', 'your-plugin' ),
+		// 			'label_off' => esc_html__( 'Hide', 'your-plugin' ),
+		// 			'return_value' => 'yes',
+		// 			'default' => 'yes',
+		// 		)
+		// 	);
+		// 	//break;
+		// }
 		$this->add_control(
 			'title',
 			array(

@@ -12,9 +12,10 @@
  * @since      1.0.0
  * php version 7.3.9
  */
-//namespace Inc\Pages;
 
-//use Inc\Api\SettingsApi;
+namespace UnbBooking\Admin;
+
+use UnbBooking\Api\SettingsApi;
 
 /**
  * UNB Booking Plugin Admin Class
