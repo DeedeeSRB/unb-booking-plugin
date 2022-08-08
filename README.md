@@ -8,7 +8,14 @@ For this version of the plugin only "room" exist as a product. A "room" include 
 
 ### Products widget
 
-Using this widget will allow you to display all your products that can be booked for your visitors to choose from.
+Rhis widget will allow you to display all your products that can be booked for your visitors to choose from.
+
+### Rooms to-be-booked widget
+
+This widget will allow to display ALL your bookable (currently available or unavailable) rooms.
+##### Options
+Maximum number of rooms in the list (min: 1, max: 100)
+
 
 ## Settings
 
