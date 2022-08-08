@@ -4,6 +4,7 @@
  */
 namespace UnbBooking;
 
+use UnbBooking\Base\Enqueue;
 use UnbBooking\Admin\Admin;
 use UnbBooking\Admin\CPTAdmin;
 
@@ -15,10 +16,12 @@ final class Init
 	 */
 	public static function get_services() 
 	{
+		require plugin_dir_path( UNB_BOOKING ) . '/inc/Base/Enqueue.php';
 		require plugin_dir_path( UNB_BOOKING ) . '/inc/Admin/Admin.php';
 		require plugin_dir_path( UNB_BOOKING ) . '/inc/Admin/CPTAdmin.php';
 
 		return [
+			Enqueue::class,
 			Admin::class,
 			CPTAdmin::class,
 		];

@@ -45,8 +45,8 @@ class showBookingRooms extends Widget_Base {
 		// wp_register_style( 'unb_booking_daterangepicker_style', plugins_url( '/assets/daterangepicker/daterangepicker.css', UNB_BOOKING ), array(), '1.0.0' );
 		// wp_register_script( 'unb_booking_daterangepicker_script', plugins_url( '/assets/daterangepicker/daterangepicker.js', UNB_BOOKING ), array('jquery'), '1.0.0' );
 
-		wp_register_style( 'unb_booking_style', plugins_url( '/assets/css/main.css', UNB_BOOKING ), array(), '1.0.0' );
-		wp_register_script( 'unb_booking_script', plugins_url( '/assets/js/script.js', UNB_BOOKING ), array('jquery'), '1.0.0' );	
+		// wp_register_style( 'unb_booking_style', plugins_url( '/assets/css/main.css', UNB_BOOKING ), array(), '1.0.0' );
+		// wp_register_script( 'unb_booking_script', plugins_url( '/assets/js/script.js', UNB_BOOKING ), array('jquery'), '1.0.0' );	
 	}
 	/**
 	 * Retrieve the widget name.
@@ -133,32 +133,21 @@ class showBookingRooms extends Widget_Base {
 			)
 		);
 
-		//require_once UNB_PLUGIN_PATH . 'inc/CPT/RegisterCPT.php';
+		require_once UNB_PLUGIN_PATH . 'inc/CPT/RegisterCPT.php';
 
-		// $reg = new RegisterCPT();
-		// echo();
-		// foreach ( RegisterCPT::$customPostTypes as $cpt ) {
-		// 	$this->add_control(
-		// 		$cpt['singular_name'],
-		// 		array(
-		// 			'label'   => __( $cpt['singular_name'], 'unb_booking' ),
-		// 			'type'    => Controls_Manager::SWITCHER,
-		// 			'label_on' => esc_html__( 'Show', 'your-plugin' ),
-		// 			'label_off' => esc_html__( 'Hide', 'your-plugin' ),
-		// 			'return_value' => 'yes',
-		// 			'default' => 'yes',
-		// 		)
-		// 	);
-		// 	//break;
-		// }
-		$this->add_control(
-			'title',
-			array(
-				'label'   => __( 'Title', 'unb_booking' ),
-				'type'    => Controls_Manager::TEXT,
-				'default' => __( 'Title', 'unb_booking' ),
-			)
-		);
+		foreach ( RegisterCPT::$customPostTypes as $cpt ) {
+			$this->add_control(
+				$cpt['name'],
+				array(
+					'label'   => __( $cpt['name'], 'unb_booking' ),
+					'type'    => Controls_Manager::SWITCHER,
+					'label_on' => esc_html__( 'Show', 'your-plugin' ),
+					'label_off' => esc_html__( 'Hide', 'your-plugin' ),
+					'return_value' => 'yes',
+					'default' => 'yes',
+				)
+			);
+		}
 		
 		$this->end_controls_section();
 	}
@@ -173,19 +162,17 @@ class showBookingRooms extends Widget_Base {
 	 */
 	protected function render() {
 		$settings = $this->get_settings_for_display();
-		$args = array(
-   			'post_type' => 'room',
-			'post_status' => array('publish'),
-			'posts_per_page' => 6,
-
-		);
-		$query = new \WP_Query( $args );
-		$posts = $query->posts;
-		foreach($posts as $post) {
-			echo $post->post_title;
-			// $img = get_the_post_thumbnail_url( $post->ID, 'post-thumbnail' );
-			?> <img src="<?= $img ?>" alt=""> <?php
+		foreach ( RegisterCPT::$customPostTypes as $cpt ) {
+			$args = array(
+				'post_type' => strtolower( $cpt['singular_name'] ),
+				'post_status' => array('publish'),
+				//'posts_per_page' => 6,
+			);
+			$query = new \WP_Query( $args );
+			$cpt_posts[$cpt['name']] = $query->posts;
 		}
+		
+		return include_once UNB_PLUGIN_PATH . '/templates/booking-widget.php';
 	}
 	/**
 	 * Render the widget output in the editor.

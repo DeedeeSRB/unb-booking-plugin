@@ -21,7 +21,6 @@ use UnbBooking\CPTs\RegisterCPT;
  * UNB Booking Plugin Custom Post Type Admin Class
  *
  * Responsible to creating and setting custom post types data in the RegisterCPT.php file and calling to register them for the admin panel.
- * 
  */
 class CPTAdmin 
 {

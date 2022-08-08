@@ -1,8 +1,19 @@
 <?php
 /**
- * @package  AlecadddPlugin
+ * Activate class.
+ *
+ * @category   Class
+ * @package    UNBBookingPlugin
+ * @subpackage WordPress
+ * @author     Unbelievable Digital
+ * @copyright  2022 Unbelievable Digital
+ * @license    https://opensource.org/licenses/GPL-3.0 GPL-3.0-only
+ * @link       https://unbelievable.digital/
+ * @since      1.0.0
+ * php version 7.3.9
  */
-//namespace Inc\Base;
+
+namespace UnbBooking\Base;
 
 class Activate
 {
