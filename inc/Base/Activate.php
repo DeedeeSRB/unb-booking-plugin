@@ -32,8 +32,10 @@ class Activate
 
 		if ( !get_option( 'currency_options' ) ) {
 			$currency_default = array(
-                'currency_type' => array( 'USD' => array( 'Dollar', '$' ) ),
-                'currency_pos' => array( 'Right' ),
+                'type' => 'USD',
+				'name' => 'Dollar',
+				'symbol' => '$',
+                'pos' => 'Right',
             );
 		    update_option( 'currency_options', $currency_default );
 		}

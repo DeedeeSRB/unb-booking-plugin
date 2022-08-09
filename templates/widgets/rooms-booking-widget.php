@@ -7,11 +7,10 @@
         $currency = get_option( 'unb_product_currency_icon' ) ? get_option( 'unb_product_currency_icon' ) : '<i class="fas fa-dollar-sign"></i>';
 
         $currencyOptions = get_option( 'currency_options' );
-        $currencySide = isset( $currencyOptions['currency_pos'] ) ? $currencyOptions['currency_pos'] : 'Right'; 
-        $currencyDetails = isset( $currencyOptions['currency_type'] ) ? json_decode( $currencyOptions['currency_type'], true ) : array( 'USD' => array( 'Dollar', '$' ) ); 
-        $symbol = json_decode( array_pop( $currencyDetails ), true )[1];
+        $pos = isset( $currencyOptions['pos'] ) ? $currencyOptions['pos'] : 'Right'; 
+        $symbol = isset( $currencyOptions['symbol'] ) ? $currencyOptions['symbol'] : '$'; 
         
-        $title = strcmp( $currencySide, 'Left' ) == 0 ? $symbol . ' ' . $price :  $price . ' ' . $symbol;
+        $title = strcmp( $pos, 'Left' ) == 0 ? $symbol . ' ' . $price :  $price . ' ' . $symbol;
 
         $img = get_the_post_thumbnail_url( $post->ID, 'post-thumbnail' );
         ?>

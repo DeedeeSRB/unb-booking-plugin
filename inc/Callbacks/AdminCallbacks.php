@@ -16,6 +16,15 @@ class AdminCallbacks
 		return require_once UNB_PLUGIN_PATH . '/templates/admin-settings.php';
 	}
 
+	public function currencySanitize( $input )
+	{
+		$currency = json_decode( $input['type'] );
+		$input['type'] = $currency[0];
+		$input['name'] = $currency[1];
+		$input['symbol'] = $currency[2];
+		return $input;
+	}
+
 	public static function currencySection() 
 	{
 		echo '<h2>Currency options</h2>';
@@ -45,18 +54,15 @@ class AdminCallbacks
 		$option_name = $args['option_name'];
 
 		$options = get_option( $option_name );
-		$selected = isset( $options[$name] ) ? key( json_decode( $options[$name] ) ) : 'USD'; 
-		$side = isset( $options['currency_pos'] ) ? $options['currency_pos'] : array( 'Right' );
+		$selected = isset( $options['type'] ) ? $options['type'] : 'USD'; 
+		$pos = isset( $options['pos'] ) ? $options['pos'] : 'Right';
 		
 		?>
-		<select name="<?= $option_name . '[' . $name . ']' ?>" id="<?= $name ?>">
+		<select name="<?= $option_name . '[type]' ?>" id="<?= $name ?>">
 		<?php 
 			foreach( $values as $value => $title ) {
-				$rValue = esc_html( json_encode( array( $value => json_encode( array( $title[0], $title[1] ) ) ) ) );
-				$title = strcmp( $side, 'Left' ) == 0 ?  $title[1] . ' ' . $title[0] :  $title[0] . ' ' . $title[1];
-				echo $value;
-				
-				echo strcmp( $value, $selected);
+				$rValue = esc_html( json_encode( array( $value, $title[0], $title[1] ) ) );
+				$title = strcmp( $pos, 'Left' ) == 0 ?  $title[1] . ' ' . $title[0] :  $title[0] . ' ' . $title[1];
 				?>
 					<option value="<?= $rValue ?>" <?= strcmp( $value, $selected) == 0 ? 'selected' : '' ?>><?= $title ?></option>
 				<?php 
@@ -73,10 +79,10 @@ class AdminCallbacks
 		$option_name = $args['option_name'];
 
 		$options = get_option( $option_name );
-		$selected = isset( $options[$name] ) ? $options[$name] : 'Right'; 
+		$selected = isset( $options['pos'] ) ? $options['pos'] : 'Right'; 
 		
 		?>
-		<select name="<?= $option_name . '[' . $name . ']' ?>" id="<?= $name ?>">
+		<select name="<?= $option_name . '[pos]' ?>" id="<?= $name ?>">
 		<?php 
 			foreach( $values as $value ) {
 				?>

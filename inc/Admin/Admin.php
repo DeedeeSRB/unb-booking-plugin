@@ -115,6 +115,7 @@ class Admin
 			array(
 				'option_group' => 'unb_booking_plugin_currency_options',
 				'option_name' => 'currency_options',
+				'callback' => array( 'AdminCallbacks', 'currencySanitize' )
 			),
 			array(
 				'option_group' => 'unb_booking_plugin_room_options',
