@@ -30,6 +30,14 @@ class Activate
 		    update_option( 'room_options', $room_default );
 		}
 
+		if ( !get_option( 'currency_options' ) ) {
+			$currency_default = array(
+                'currency_type' => array( 'USD' => array( 'Dollar', '$' ) ),
+                'currency_pos' => array( 'Right' ),
+            );
+		    update_option( 'currency_options', $currency_default );
+		}
+
 		
 	}
 }

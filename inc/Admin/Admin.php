@@ -113,9 +113,12 @@ class Admin
 	{
 		$args = array(
 			array(
+				'option_group' => 'unb_booking_plugin_currency_options',
+				'option_name' => 'currency_options',
+			),
+			array(
 				'option_group' => 'unb_booking_plugin_room_options',
 				'option_name' => 'room_options',
-				//'callback' => array( 'AdminCallbacks', 'roomSanitize' ),
 			),
 		);
 
@@ -132,10 +135,15 @@ class Admin
 	{
 		$args = array(
 			array(
+				'id' => 'unb_booking_plugin_currency_section',
+				'callback' => array( 'AdminCallbacks', 'currencySection' ),
+				'page' => 'unb_booking_plugin'
+			),
+			array(
 				'id' => 'unb_booking_plugin_room_section',
 				'callback' => array( 'AdminCallbacks', 'roomSection' ),
 				'page' => 'unb_booking_plugin_settings'
-			)
+			),
 		);
 
 		$this->settings->setSections( $args );
@@ -150,6 +158,39 @@ class Admin
 	public function setFields()
 	{
 		$args = array(
+			array(
+				'id' => 'currency_type',
+				'title' => 'Currency',
+				'callback' => array( 'AdminCallbacks', 'currencyType' ),
+				'page' => 'unb_booking_plugin',
+				'section' => 'unb_booking_plugin_currency_section',
+				'args' => array(
+					'label_for' => 'currency_type',
+					'option_name' => 'currency_options',
+					'values' => array(
+						'TRY' => array( 'Turkish Lira', '₺' ),
+						'USD' => array( 'Dollar', '$' ),
+						'EUR' => array( 'Euro', '€' ),
+						'RUB' => array( 'Russia Ruble', '₽' ),
+						'AED' => array( 'UAE Dirham', 'د.إ' ),
+					),
+				)
+			),
+			array(
+				'id' => 'currency_pos',
+				'title' => 'Currency Position',
+				'callback' => array( 'AdminCallbacks', 'currencyPos' ),
+				'page' => 'unb_booking_plugin',
+				'section' => 'unb_booking_plugin_currency_section',
+				'args' => array(
+					'label_for' => 'currency_pos',
+					'option_name' => 'currency_options',
+					'values' => array(
+						'Right',
+						'Left'
+					),
+				)
+			),
 			array(
 				'id' => 'room_price',
 				'title' => 'Price',
