@@ -71,7 +71,7 @@ class ShowBookingProducts extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'UNB Booking Products', 'unb_booking' );
+		return __( 'UNB Products List', 'unb_booking' );
 	}
 	/**
 	 * Retrieve the widget icon.

@@ -52,7 +52,7 @@ class ShowBookingRooms extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'UNB Booking Room', 'unb_booking' );
+		return __( 'UNB Rooms List', 'unb_booking' );
 	}
 
 	/**

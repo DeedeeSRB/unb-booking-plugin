@@ -82,16 +82,6 @@ class BookRoomButton extends Widget_Base {
 				'label' => __( 'UNB Book Room Button', 'unb_booking' ),
 			)
 		);
-
-		$this->add_control(
-			'room_name',
-			array(
-				'label'   => __( 'Room Name', 'unb_booking' ),
-				'type' => Controls_Manager::TEXT,
-				'placeholder' => 'eg. Room 1XX',
-			)
-		);
-		
 		
 		$this->end_controls_section();
 	}
