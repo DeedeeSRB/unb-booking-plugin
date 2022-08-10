@@ -73,13 +73,6 @@ function register_wcclasses() {
 
     }
 
-    //Step 4. Use the post id to add the post to cart
-    // <form action="" method="post">
-    //     <input name="add-to-cart" type="hidden" value="the_ID();" />
-    //     <input name="quantity" type="number" value="1" />
-    //     <input name="submit" type="submit" value="Add to cart" />
-    // </form>
-
     // Note: If you've done till this step, then the post will be added to cart and WooCommerce will recognize it as cart item up to checkout process. 
     // But WooCommerce won't recognize it as an order item after checkout is done. To make it available as an order item, we need to follow some more steps.
 

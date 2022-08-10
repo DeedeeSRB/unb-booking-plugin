@@ -21,16 +21,17 @@ function unb_book_room_submit(button) {
     fd.append('action', 	"unb_book_room");
     fd.append('room_id',	room_id);
 
-    ajax_submit(fd, function(){}, "", "#unb_book_room_alert");
+    ajax_submit(fd, unb_book_room_callback, "#unb_book_room_suc", "#unb_book_room_alert");
 }
 
-// function unb_book_room_callback(data) {
-//     var jdata = JSON.parse(data);
-//     var success = jdata.success;
-//     if (success == 1) {
-        
-//     }
-// }
+function unb_book_room_callback(data) {
+    var jdata = JSON.parse(data);
+    var success = jdata.success;
+    var url = jdata.url;
+    if (success == 1) {
+        window.location.replace(url);
+    }
+}
 
 function ajax_submit(data, callback, suc_div, alert_div)
 {

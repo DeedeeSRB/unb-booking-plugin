@@ -1,6 +1,7 @@
 <div class="d-flex justify-content-end">
     <div class="col-auto">
         <div id="unb_book_room_alert" class="alert alert-danger alert-dismissible collapse" role="alert"></div>
+        <div id="unb_book_room_suc" class="alert alert-success alert-dismissible collapse"></div>
         <div class="card">
             <div class="card-body">
                 <label for="in" class="form-label">Check In</label>
