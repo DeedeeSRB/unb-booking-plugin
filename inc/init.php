@@ -7,6 +7,8 @@ namespace UnbBooking;
 use UnbBooking\Base\Enqueue;
 use UnbBooking\Admin\Admin;
 use UnbBooking\Admin\CPTAdmin;
+use UnbBooking\Manage\AjaxManager;
+use UnbBooking\Manage\WCManager;
 
 final class Init
 {
@@ -19,11 +21,15 @@ final class Init
 		require plugin_dir_path( UNB_BOOKING ) . '/inc/Base/Enqueue.php';
 		require plugin_dir_path( UNB_BOOKING ) . '/inc/Admin/Admin.php';
 		require plugin_dir_path( UNB_BOOKING ) . '/inc/Admin/CPTAdmin.php';
+		require plugin_dir_path( UNB_BOOKING ) . '/inc/Manage/AjaxManager.php';
+		require plugin_dir_path( UNB_BOOKING ) . '/inc/Manage/WCManager.php';
 
 		return [
 			Enqueue::class,
 			Admin::class,
 			CPTAdmin::class,
+			AjaxManager::class,
+			WCManager::class,
 		];
 	}
 

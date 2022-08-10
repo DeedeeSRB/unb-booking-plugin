@@ -21,8 +21,9 @@ use Elementor\Controls_Manager;
 
 // Security Note: Blocks direct access to the plugin PHP files.
 defined( 'ABSPATH' ) || die();
+
 /**
- * Awesomesauce widget class.
+ * Show Booking Products widget class.
  *
  * @since 1.0.0
  */

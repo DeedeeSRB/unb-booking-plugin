@@ -68,6 +68,7 @@ class Widgets {
 		require_once 'widgets/class-main.php';
 		require_once 'widgets/class-booking.php';
 		require_once 'widgets/class-rooms.php';
+		require_once 'widgets/book-room-button.php';
 	}
 
 	/**
@@ -86,6 +87,7 @@ class Widgets {
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\UnbBooking() );
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\ShowBookingProducts() );
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\ShowBookingRooms() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\BookRoomButton() );
 	}
 
 	/**

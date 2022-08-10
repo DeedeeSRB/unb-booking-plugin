@@ -1,6 +1,6 @@
 <?php
 /**
- * ShowBookingRooms class.
+ * BookRoomButton class.
  *
  * @category   Class
  * @package    UNBBookingPlugin
@@ -14,8 +14,6 @@
  */
 namespace UnbBooking\Widgets;
 
-use UnbBooking\CPTs\RegisterCPT;
-
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 
@@ -23,11 +21,11 @@ use Elementor\Controls_Manager;
 defined( 'ABSPATH' ) || die();
 
 /**
- * Show Booking Rooms widget class.
+ * Book Room Button widget class.
  *
  * @since 1.0.0
  */
-class ShowBookingRooms extends Widget_Base {
+class BookRoomButton extends Widget_Base {
 
 	/**
 	 * Retrieve the widget name.
@@ -39,7 +37,7 @@ class ShowBookingRooms extends Widget_Base {
 	 * @return string Widget name.
 	 */
 	public function get_name() {
-		return 'unb_booking_rooms';
+		return 'unb_book_room_button';
 	}
 
 	/**
@@ -52,7 +50,7 @@ class ShowBookingRooms extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return __( 'UNB Booking Room', 'unb_booking' );
+		return __( 'UNB Book Room Button', 'unb_booking' );
 	}
 
 	/**
@@ -81,20 +79,16 @@ class ShowBookingRooms extends Widget_Base {
 		$this->start_controls_section(
 			'section_content',
 			array(
-				'label' => __( 'UNB Booking Rooms', 'unb_booking' ),
+				'label' => __( 'UNB Book Room Button', 'unb_booking' ),
 			)
 		);
 
 		$this->add_control(
-			'mum_of_rooms',
+			'room_name',
 			array(
-				'label'   => __( 'Number of Rooms', 'unb_booking' ),
-				'type' => Controls_Manager::NUMBER,
-				'placeholder' => 'eg. 6',
-				'min' => 1,
-				'max' => 100,
-				'step' => 1,
-				'default' => 6,
+				'label'   => __( 'Room Name', 'unb_booking' ),
+				'type' => Controls_Manager::TEXT,
+				'placeholder' => 'eg. Room 1XX',
 			)
 		);
 		
@@ -113,14 +107,8 @@ class ShowBookingRooms extends Widget_Base {
 	 */
 	protected function render() {
 		$settings = $this->get_settings_for_display();
-		$args = array(
-			'post_type' => 'room',
-			'post_status' => array('publish'),
-			'posts_per_page' => $settings['mum_of_rooms'],
-		);
-		$query = new \WP_Query( $args );
-		$posts = $query->posts;
+        $post_id = get_the_ID();
 		
-		return include_once UNB_PLUGIN_PATH . '/templates/widgets/rooms-booking-widget.php';
+		return include_once UNB_PLUGIN_PATH . '/templates/widgets/book-room-button-widget.php';
 	}
 }

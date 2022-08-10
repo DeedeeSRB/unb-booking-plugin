@@ -206,7 +206,6 @@ class RegisterCPT
 
         if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
             $data = get_post_meta( $post_id , $column , true );
-            error_log($data);
             if ( isset( $data ) && $data != '' ) {
                 echo $data;
                 return;
