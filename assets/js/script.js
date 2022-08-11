@@ -59,14 +59,14 @@ function submit_callback(data, suc_div, alert_div) {
     if ( success == 1) {
         $(suc_div).show();
         $(suc_div).html('<div class="fs-6">' + mess + '</div>');
-        $(suc_div).delay(2500).fadeOut(500, function() { $(this).hide(); });
+        $(suc_div).delay(3500).fadeOut(500, function() { $(this).hide(); });
     }
 
     if ( success == 2) {
         //alert(mess);
         $(alert_div).show();
         $(alert_div).html('<div class="fs-6">' + mess + '</div>');
-        $(alert_div).delay(2500).fadeOut(500, function() { $(this).hide(); });
+        $(alert_div).delay(3500).fadeOut(500, function() { $(this).hide(); });
     }
     
     if (success == 3 ) {

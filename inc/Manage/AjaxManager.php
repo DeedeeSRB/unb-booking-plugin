@@ -43,12 +43,21 @@ class AjaxManager
         $room_id = $_POST['room_id'];
 
         // TODO: Check if the check in/out dates are real dates and that they are available.
+        
         $check_in = $_POST['check_in'];
         $check_out = $_POST['check_out'];
-        
-        
 
-        get_post_meta( $room_id, 'room_min_booking_days', true );
+        $check_in_date = new \DateTime( $check_in );
+        $check_out_date = new \DateTime( $check_out );
+        
+        $min_booking_days = get_post_meta( $room_id, 'room_min_booking_days', true );
+        $booking_days = $check_in_date->diff($check_out_date)->format('%a');
+
+        if ( $booking_days < $min_booking_days) {
+            $return['success'] = 2;
+            $return['message'] = 'You can\'t book this room for less than ' . $min_booking_days . ' days';
+            exit( json_encode( $return ) );
+        }
 
         $product_id = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $room_id ) );
         $quantity = 1;
