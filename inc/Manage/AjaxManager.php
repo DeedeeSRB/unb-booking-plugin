@@ -41,8 +41,12 @@ class AjaxManager
         }  
 
         $room_id = $_POST['room_id'];
+
+        // TODO: Check if the check in/out dates are real dates and that they are available.
         $check_in = $_POST['check_in'];
         $check_out = $_POST['check_out'];
+        
+        
 
         get_post_meta( $room_id, 'room_min_booking_days', true );
 

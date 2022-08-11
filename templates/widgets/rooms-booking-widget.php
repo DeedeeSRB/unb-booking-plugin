@@ -1,6 +1,7 @@
 <?php
     foreach ( $posts as $post) {
         $price = get_post_meta( $post->ID, 'room_price', true );
+        $desc = get_post_meta( $post->ID, 'room_desc', true );
         $maxnv = get_post_meta( $post->ID, 'room_max_num_vis', true );
         $minbd = get_post_meta( $post->ID, 'room_min_booking_days', true );
         $amen = get_post_meta( $post->ID, 'room_amenities', true );
@@ -17,7 +18,7 @@
             <div class="row my-4">
                 <div class="col text-start">
                     <a href="<?= $post->guid ?>"><?= esc_html__( $post->post_title ) ?></a>
-                    <div><?= esc_html__( $post->post_content ) ?></div>  
+                    <div><?= esc_html__( $desc ) ?></div>  
                     <div><?= esc_html( $title ) ?> </div>
                     <div><i class="fas fa-users"></i> <?= $maxnv ?> </div>
                     <div><i class="fas fa-calendar-day"></i> <?= $minbd ?> </div>

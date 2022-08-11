@@ -206,17 +206,8 @@ class RegisterCPT
 
         if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
             $data = get_post_meta( $post_id , $column , true );
-            if ( isset( $data ) && $data != '' ) {
+            if ( isset( $data ) && $data != '' ) 
                 echo $data;
-                return;
-            }
-            else {
-                
-                $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
-                $option = get_option( $option_name );
-                $data = $option[$column];
-                echo $data . ' (Default value)';
-            }
         }        
     }
 

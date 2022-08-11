@@ -107,6 +107,11 @@ class CPTAdmin
          */
         $roomMetaFields = array(
             array(
+                'id' => 'room_desc',
+                'label' => 'Description',
+                'type' => 'textarea',
+            ),
+            array(
                 'id' => 'room_price',
                 'label' => 'Price',
                 'place_holder' => 'Enter a price',
