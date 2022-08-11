@@ -165,6 +165,10 @@ class RegisterCPT
             
             foreach( RegisterCPT::$metaFields[$post->post_type] as $metaField ) {
                 $fieldToUpdate = $_POST[$metaField['id']];
+                if ( !isset( $fieldToUpdate ) || $fieldToUpdate == '' ) {
+                    $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
+                    $fieldToUpdate = get_option( $option_name )[$metaField['id']] ;
+                }
                 update_post_meta( $post_id, $metaField['id'], $fieldToUpdate );
             } 
         }

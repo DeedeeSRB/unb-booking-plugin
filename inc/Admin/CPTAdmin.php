@@ -114,22 +114,25 @@ class CPTAdmin
             array(
                 'id' => 'room_price',
                 'label' => 'Price',
-                'place_holder' => 'Enter a price',
+                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_price'] . ')',
             ),
             array(
                 'id' => 'room_max_num_vis',
                 'label' => 'Maximum number of visitors',
-                'columnName' => 'Max. No. of visitors'
+                'columnName' => 'Max. No. of visitors',
+                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_max_num_vis'] . ')',
             ),
             array(
                 'id' => 'room_min_booking_days',
                 'label' => 'Minumum booking days',
-                'columnName' => 'Min. booking days'
+                'columnName' => 'Min. booking days',
+                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_min_booking_days'] . ')',
             ),
             array(
                 'id' => 'room_amenities',
                 'label' => 'Amenties',
                 'type' => 'textarea',
+                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_amenities'] . ')',
             ),
         ); 
 
