@@ -40,6 +40,9 @@ class WCManager
         add_filter( 'woocommerce_get_order_item_classname', array( $this , 'room_woocommerce_get_order_item_classname' ) , 20, 3 );
         add_filter( 'woocommerce_product_type_query', array( $this , 'room_woo_product_type' ), 12, 2 );
         add_filter( 'woocommerce_checkout_create_order_line_item_object', array( $this , 'room_woocommerce_checkout_create_order_line_item_object' ), 20, 4 );
+
+        add_filter( 'woocommerce_get_item_data', array( $this , 'display_cart_item_custom_meta_data' ), 10, 2 );
+        add_action( 'woocommerce_checkout_create_order_line_item', array( $this , 'save_cart_item_custom_meta_as_order_item_meta' ), 10, 4 );
         
 	}
 
@@ -129,6 +132,31 @@ class WCManager
         }
         
         return $item;
+    }
+
+    // Display custom cart item meta data (in cart and checkout)
+    function display_cart_item_custom_meta_data( $item_data, $cart_item ) {
+        $meta_keys = array( 'Check in', 'Check out' );
+        foreach ( $meta_keys as $meta_key ){
+            if ( isset( $cart_item[$meta_key] ) ) {
+                $item_data[] = array(
+                    'key'       => $meta_key,
+                    'value'     => $cart_item[$meta_key],
+                );
+            }
+        }
+        
+        return $item_data;
+    }
+
+    // Save cart item custom meta as order item meta data and display it everywhere on orders and email notifications.
+    function save_cart_item_custom_meta_as_order_item_meta( $item, $cart_item_key, $values, $order ) {
+        $meta_keys = array( 'Check in', 'Check out' );
+        foreach ( $meta_keys as $meta_key ){
+            if ( isset( $values[$meta_key] ) ) {
+                $item->update_meta_data( $meta_key, $values[$meta_key] );
+            }
+        }
     }
 }
 

@@ -12,6 +12,8 @@
 //// BOOK ROOM ////
 function unb_book_room_submit(button) {
 
+    if ( !document.forms['unb_book_room_form'].reportValidity() ) return;
+
     var fd = new FormData();
     
     nonce = $(button).attr("data-nonce");
@@ -20,6 +22,8 @@ function unb_book_room_submit(button) {
     fd.append('nonce', 		nonce);
     fd.append('action', 	"unb_book_room");
     fd.append('room_id',	room_id);
+    fd.append('check_in',	$("#unb_room_check_in_form").val());
+    fd.append('check_out',	$("#unb_room_check_out_form").val());
 
     ajax_submit(fd, unb_book_room_callback, "#unb_book_room_suc", "#unb_book_room_alert");
 }
@@ -75,16 +79,16 @@ jQuery(document).ready(function($) {
     var tomorrow = new Date();
     tomorrow.setDate(new Date().getDate() + 1);
 
-    $("#in").datepicker({
+    $("#unb_room_check_in_form").datepicker({
         minDate: tomorrow,
         onSelect: function(dateText, inst) {
             // Get the selected date
             var inDate = new Date($(this).val());
-            $("#out").datepicker('option', 'minDate', inDate);
+            $("#unb_room_check_out_form").datepicker('option', 'minDate', inDate);
         }
     });
 
-    $('#out').datepicker({
+    $('#unb_room_check_out_form').datepicker({
         minDate: tomorrow
     });
 })

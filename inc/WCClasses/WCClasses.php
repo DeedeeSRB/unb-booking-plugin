@@ -94,14 +94,17 @@ function register_wcclasses() {
 
 function return_room_wc_class() {
     // Make sure your CPT is recognized as Product when WooCommerce tries to get product class
-    class Room_WC_Order_Item_Product extends WC_Order_Item_Product {
-        public function set_product_id( $value ) {
-            if ( $value > 0 && 'room' !== get_post_type( absint( $value ) ) ) {
-                $this->error( 'order_item_product_invalid_product_id', __( 'Invalid product ID' ) );
+    if ( !class_exists('Room_WC_Order_Item_Product' ) ) {
+        class Room_WC_Order_Item_Product extends WC_Order_Item_Product {
+            public function set_product_id( $value ) {
+                if ( $value > 0 && 'room' !== get_post_type( absint( $value ) ) ) {
+                    $this->error( 'order_item_product_invalid_product_id', __( 'Invalid product ID' ) );
+                }
+                $this->set_prop( 'product_id', absint( $value ) );
             }
-            $this->set_prop( 'product_id', absint( $value ) );
         }
     }
+    
 
     return new Room_WC_Order_Item_Product();
 }

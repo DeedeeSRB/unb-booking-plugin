@@ -40,12 +40,23 @@ class AjaxManager
             exit( json_encode( $return ) );
         }  
 
-        $product_id = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $_POST['room_id'] ) );
+        $room_id = $_POST['room_id'];
+        $check_in = $_POST['check_in'];
+        $check_out = $_POST['check_out'];
+
+        get_post_meta( $room_id, 'room_min_booking_days', true );
+
+        $product_id = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $room_id ) );
         $quantity = 1;
         $passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity );
         $product_status = get_post_status( $product_id );
 
-        if ( $passed_validation && WC()->cart->add_to_cart( $product_id, $quantity ) && 'publish' === $product_status ) {
+        $order_info = array(
+            'Check in' => $check_in,
+            'Check out' => $check_out
+        );
+
+        if ( $passed_validation && WC()->cart->add_to_cart( $product_id, $quantity, 0, array(), $order_info ) && 'publish' === $product_status ) {
 
             do_action( 'woocommerce_ajax_added_to_cart', $product_id );
 
@@ -56,7 +67,6 @@ class AjaxManager
         else {
             $return['success'] = 2;
             $return['message'] = "An error occured";
-            $return['product_url'] = apply_filters( 'woocommerce_cart_redirect_after_error', get_permalink( $product_id ), $product_id );
             exit( json_encode( $return ) );
         }
 
