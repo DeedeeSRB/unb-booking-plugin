@@ -51,4 +51,44 @@ class CPTMetaCallbacks
             echo '</div>';
         }
 	}
+
+    public static function bookingBox( $post_args, $callback_args )
+	{
+		wp_nonce_field( UNB_PLUGIN_NAME, $callback_args['args']['nonce'] );
+        $rooms = get_post_meta( $post_args->ID, 'booking_rooms', true);
+        $checkInValue = get_post_meta( $post_args->ID, 'booking_check_in', true);
+        $checkOutValue = get_post_meta( $post_args->ID, 'booking_check_out', true);
+        $totalPrice = get_post_meta( $post_args->ID, 'booking_price', true);
+        $userFirstname = get_post_meta( $post_args->ID, 'booking_user', true);
+        $userEmail = get_post_meta( $post_args->ID, 'booking_email', true);
+        $userPhone = get_post_meta( $post_args->ID, 'booking_phone', true);
+        ?>
+        <div class="row">
+            <div class="col"> 
+                <div class="fs-5 mb-3">Order dates</div>
+                <label for="booking_check_in">Check in</label>
+                <div>
+                    <input type="text" class="regular-text" id="booking_check_in" name="booking_check_in" value="<?= $checkInValue ?>"/>
+                </div>    
+                <label for="booking_check_out">Check Out</label>
+                <div>
+                    <input type="text" class="regular-text" id="booking_check_in" name="booking_check_in" value="<?= $checkOutValue ?>"/>
+                </div> 
+            </div>
+            <div class="col"> 
+                <div class="fs-5 mb-3">Orderer details</div>
+                <div>Order by</div>
+                <div class="mb-2"><?= $userFirstname ?></div>
+                <div>Email</div>
+                <div class="mb-2"><?= $userEmail ?></div>
+                <div>Phone number</div>
+                <div class="mb-2"><?= $userPhone ?></div>
+            </div>
+            <div class="col">
+                <div class="fs-5 mb-3">Room details</div>
+            </div>
+        </div>
+        <?php
+    }
 }
+

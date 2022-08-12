@@ -18,7 +18,7 @@ namespace UnbBooking\CPTs;
  /**
  * UNB Booking Plugin Registering Custom Post Type Class
  *
- * Responsible to register the plugin's custom post types for the admin panel.
+ * Responsible to register the plugin's custom post types dynamicly for the admin panel.
  * 
  */
 class RegisterCPT 

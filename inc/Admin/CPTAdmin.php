@@ -113,6 +113,7 @@ class CPTAdmin
 
         /**
          *  The fields array of any meta box will hold all the fields that should be displayed in that meta box.
+         *  Not all fields have to be displayed in the meta box or columns.
          *  These fields can take the attributes 'id', 'label', 'type', 'place_holder', and 'columnName'.
          *      Required fields: 'id' and 'label'
          *      Constraints: 'id' should be unique for each field
@@ -152,19 +153,10 @@ class CPTAdmin
             ),
         ); 
 
-
-        $roomArgs = array( 'post_type' => 'room', 'post_status' => 'publish' );
-        $rooms = get_posts( $roomArgs );
-        foreach ( $rooms as $room ) {
-            $roomOptions[] = $room->post_title;
-        }
-
         $bookingMetaFields = array(
             array(
-                'id' => 'booking_room',
-                'label' => 'Room',
-                'type' => 'select',
-                'options' => $roomOptions,
+                'id' => 'booking_rooms',
+                'label' => 'Booked rooms',
             ),
             array(
                 'id' => 'booking_check_in',
@@ -179,12 +171,8 @@ class CPTAdmin
                 'label' => 'Total Price',
             ),
             array(
-                'id' => 'booking_quantity',
-                'label' => 'Quantity',
-            ),
-            array(
                 'id' => 'booking_user',
-                'label' => 'Booked user',
+                'label' => 'Booked user full name',
             ),
             array(
                 'id' => 'booking_email',
@@ -193,6 +181,10 @@ class CPTAdmin
             array(
                 'id' => 'booking_phone',
                 'label' => 'Booked user phone number',
+            ),
+            array(
+                'id' => 'wc_order_id',
+                'label' => 'WC Order ID',
             ),
         ); 
 
@@ -231,14 +223,14 @@ class CPTAdmin
             array(
                 'id' => 'booking_room_content_box',
                 'title' => __( 'Booking details' ),
-                'callback' => array( 'CPTMetaCallbacks', 'postBox' ),
+                'callback' => array( 'CPTMetaCallbacks', 'bookingBox' ),
                 'screen' => 'booking',
                 'context' => 'normal',
                 'priority' => 'high',
                 'callback_args' => array(
                     'nonce' =>  'booking_box_nonce',
                     'fields' => $bookingMetaFields,
-                    'unsetColumns' => array( 'date', 'booking_email', 'booking_phone' ),
+                    'unsetColumns' => array( 'booking_email', 'booking_phone', 'wc_order_id' ),
                     'option_name' => 'booking_room_options'
                 )
             ),
