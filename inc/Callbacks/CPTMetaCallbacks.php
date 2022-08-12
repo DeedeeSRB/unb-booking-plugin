@@ -30,27 +30,25 @@ class CPTMetaCallbacks
             $place_holder = isset($field['place_holder']) ? $field['place_holder'] : '';
             echo '<div>';
                 echo '<label for="' . $field['id'] . '">' . $field['label'] . '</label>';
+
                 if ( $type == 'textarea' ) {
                     echo '<div><textarea class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $place_holder . '" >' .  $value . '</textarea></div>';
                 }
+
+                else if ( $type == 'select' ) {
+                    $options = $field['options'];
+                    echo '<div><select class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '">';
+                    foreach ( $options as $option ) { 
+                        $selected = strcmp( $option, $value) == 0 ? 'selected' : '';
+                        echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
+                    }
+                    echo '</select></div>';
+                }
+
                 else {
                     echo '<div><input type="text" class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $place_holder . '" value="' .  $value . '"/></div>';    
                 }
             echo '</div>';
         }
 	}
-
-    // public static function textType( $post_args, $callback_args )
-	// {
-	// 	wp_nonce_field( UNB_PLUGIN_NAME, $callback_args['args']['nonce'] );
-    //     echo '<label for="' . $callback_args['args']['id'] . '"></label>';
-    //     echo '<input type="text" id="' . $callback_args['args']['id'] . '" name="' . $callback_args['args']['id'] . '" placeholder="' . $callback_args['args']['place_holder'] . '" />';
-	// }
-
-    // public static function textareaType( $post_args, $callback_args )
-	// {
-	// 	wp_nonce_field( UNB_PLUGIN_NAME, $callback_args['args']['nonce'] );
-    //     echo '<label for="' . $callback_args['args']['id'] . '"></label>';
-    //     echo '<textarea style="width:100%;" id="' . $callback_args['args']['id'] . '" name="' . $callback_args['args']['id'] . '" placeholder="' . $callback_args['args']['place_holder'] . '" ></textarea>';
-	// }
 }

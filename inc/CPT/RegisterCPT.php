@@ -158,6 +158,8 @@ class RegisterCPT
         if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
             if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 
+            if ( empty( $_POST ) ) return;
+            
             if ( !wp_verify_nonce( $_POST[$post->post_type . '_box_nonce'], UNB_PLUGIN_NAME ) ) return;
 
             if ( 'page' == $_POST['post_type'] ) if ( !current_user_can( 'edit_page', $post_id ) ) return;
@@ -185,12 +187,13 @@ class RegisterCPT
         
         if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
             $columnData = RegisterCPT::$metaColumns[$post_type];
-            foreach( $columnData['unset'] as $unset ) {
-                unset( $columns[$unset] );
-            }
-    
+            
             foreach( $columnData['columnNames'] as $id => $name ) {
                 $columns[$id] = __( $name );
+            }
+
+            foreach( $columnData['unset'] as $unset ) {
+                unset( $columns[$unset] );
             }
         } 
         

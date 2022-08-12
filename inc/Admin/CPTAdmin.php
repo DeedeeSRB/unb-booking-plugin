@@ -75,12 +75,28 @@ class CPTAdmin
                 'name' => 'Rooms',
                 'singular_name' => 'Room',
                 'args' => array(
+                    'menu_icon' => 'dashicons-admin-multisite',
                     'public' => true,
                     'has_archive' => true,
                     //'hierarchical' => true, // IF ITS TRUE THE TABLE WON'T BE FILLED 
                     //'taxonomies' => array( 'categories' ),
                 )
-            )
+            ),
+            array(
+                'supports' => array(
+                    'title',
+                    'editor',
+                    'thumbnail',
+                    'page-attributes',
+                ),
+                'name' => 'Bookings',
+                'singular_name' => 'Booking',
+                'args' => array(
+                    'menu_icon' => 'dashicons-book',
+                    'public' => true,
+                    'has_archive' => true,
+                )
+            ),
         );
 
         $this->registerCPT->setCPTs($cpts);
@@ -136,6 +152,50 @@ class CPTAdmin
             ),
         ); 
 
+
+        $roomArgs = array( 'post_type' => 'room', 'post_status' => 'publish' );
+        $rooms = get_posts( $roomArgs );
+        foreach ( $rooms as $room ) {
+            $roomOptions[] = $room->post_title;
+        }
+
+        $bookingMetaFields = array(
+            array(
+                'id' => 'booking_room',
+                'label' => 'Room',
+                'type' => 'select',
+                'options' => $roomOptions,
+            ),
+            array(
+                'id' => 'booking_check_in',
+                'label' => 'Check in',
+            ),
+            array(
+                'id' => 'booking_check_out',
+                'label' => 'Check out',
+            ),
+            array(
+                'id' => 'booking_price',
+                'label' => 'Total Price',
+            ),
+            array(
+                'id' => 'booking_quantity',
+                'label' => 'Quantity',
+            ),
+            array(
+                'id' => 'booking_user',
+                'label' => 'Booked user',
+            ),
+            array(
+                'id' => 'booking_email',
+                'label' => 'Booked user email',
+            ),
+            array(
+                'id' => 'booking_phone',
+                'label' => 'Booked user phone number',
+            ),
+        ); 
+
         /**
          *  The metaBoxes array will hold all the meta boxes that should be displayed for a specific CPT.
          *  These metaBoxes can take the attributes 'id', 'title', 'callback', 'screen', 'context', 'priority', and 'callback_args'.
@@ -166,6 +226,20 @@ class CPTAdmin
                     'fields' => $roomMetaFields,
                     'unsetColumns' => array('date'),
                     'option_name' => 'room_options'
+                )
+            ),
+            array(
+                'id' => 'booking_room_content_box',
+                'title' => __( 'Booking details' ),
+                'callback' => array( 'CPTMetaCallbacks', 'postBox' ),
+                'screen' => 'booking',
+                'context' => 'normal',
+                'priority' => 'high',
+                'callback_args' => array(
+                    'nonce' =>  'booking_box_nonce',
+                    'fields' => $bookingMetaFields,
+                    'unsetColumns' => array( 'date', 'booking_email', 'booking_phone' ),
+                    'option_name' => 'booking_room_options'
                 )
             ),
         );
