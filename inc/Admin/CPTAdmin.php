@@ -95,7 +95,7 @@ class CPTAdmin
                     'menu_icon' => 'dashicons-book',
                     'public' => true,
                     'has_archive' => true,
-                )
+                ),
             ),
         );
 
@@ -231,7 +231,7 @@ class CPTAdmin
                     'nonce' =>  'booking_box_nonce',
                     'fields' => $bookingMetaFields,
                     'unsetColumns' => array( 'booking_email', 'booking_phone', 'wc_order_id' ),
-                    'option_name' => 'booking_room_options'
+                    'customDisplay' => true,
                 )
             ),
         );

@@ -65,28 +65,51 @@ class CPTMetaCallbacks
         ?>
         <div class="row">
             <div class="col"> 
-                <div class="fs-5 mb-3">Order dates</div>
-                <label for="booking_check_in">Check in</label>
-                <div>
-                    <input type="text" class="regular-text" id="booking_check_in" name="booking_check_in" value="<?= $checkInValue ?>"/>
-                </div>    
-                <label for="booking_check_out">Check Out</label>
-                <div>
-                    <input type="text" class="regular-text" id="booking_check_in" name="booking_check_in" value="<?= $checkOutValue ?>"/>
-                </div> 
+                <?php
+                $currencyOptions = get_option( 'currency_options' );
+                $pos = isset( $currencyOptions['pos'] ) ? $currencyOptions['pos'] : 'Right'; 
+                $symbol = isset( $currencyOptions['symbol'] ) ? $currencyOptions['symbol'] : '$'; 
+                foreach ( $rooms as $id => $room ) {
+                    $link = get_permalink( $id );
+                    $price = strcmp( $pos, 'Left' ) == 0 ? $symbol . ' ' . $room['total'] :  $room['total'] . ' ' . $symbol;
+                    $img = get_the_post_thumbnail_url( $id, 'post-thumbnail' );
+                    ?>
+                    <div class="row mb-5">
+                        <div class="col"> 
+                            <div class="fs-5 mb-3">Order dates</div>
+                            <label for="booking_check_in[<?= $id ?>]">Check in</label>
+                            <input type="text" class="regular-text mb-2" id="booking_check_in[<?= $id ?>]" name="booking_check_in[<?= $id ?>]" value="<?= $checkInValue[$id] ?>"/></br>
+                            <label for="booking_check_out[<?= $id ?>]">Check Out</label>
+                            <input type="text" class="regular-text" id="booking_check_out[<?= $id ?>]" name="booking_check_out[<?= $id ?>]" value="<?= $checkOutValue[$id] ?>"/>
+                        </div>
+                        <div class="col">
+                            <div class="fs-5 mb-3">Room details</div>
+                            <div class="row">
+                                <div class="col-auto">
+                                    <div>Room: <a href="<?= $link ?>"><?= $room['name'] ?></a></div>
+                                    <div>Quantity: <b class="fw-bold"> x</b><?= $room['quantity'] ?></div>
+                                    <div>Total Cost: <b class="fw-bold"><?= $price ?></b></div>
+                                </div>
+                                <div class="col text-center">
+                                    <a href="<?= $link ?>"><img height=150px" src="<?= $img ?>" alt=""></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
             </div>
-            <div class="col"> 
+            <div class="col-auto mx-5 px-5"> 
                 <div class="fs-5 mb-3">Orderer details</div>
                 <div>Order by</div>
-                <div class="mb-2"><?= $userFirstname ?></div>
+                <div class="mb-2 fw-bold"><?= $userFirstname ?></div>
                 <div>Email</div>
-                <div class="mb-2"><?= $userEmail ?></div>
+                <div class="mb-2 fw-bold"><?= $userEmail ?></div>
                 <div>Phone number</div>
-                <div class="mb-2"><?= $userPhone ?></div>
+                <div class="mb-2 fw-bold"><?= $userPhone ?></div>
             </div>
-            <div class="col">
-                <div class="fs-5 mb-3">Room details</div>
-            </div>
+            
         </div>
         <?php
     }

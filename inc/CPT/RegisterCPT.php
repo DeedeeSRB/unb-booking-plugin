@@ -153,28 +153,33 @@ class RegisterCPT
 	 * @access public
 	 */
     public static function saveCustomPosts( $post_id, $post ) {
+        
         $post_type = get_post_type( $post_id );
 
-        if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
-            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+        if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return;
 
-            if ( empty( $_POST ) ) return;
-            
-            if ( !wp_verify_nonce( $_POST[$post->post_type . '_box_nonce'], UNB_PLUGIN_NAME ) ) return;
+        // If the post type has a custom function to display the columns then this function won't proceed.
+        if ( isset( RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) && RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) return;
 
-            if ( 'page' == $_POST['post_type'] ) if ( !current_user_can( 'edit_page', $post_id ) ) return;
-            else if ( !current_user_can( 'edit_post', $post_id ) ) return;
-            
-            foreach( RegisterCPT::$metaFields[$post->post_type] as $metaField ) {
-                $fieldToUpdate = $_POST[$metaField['id']];
-                if ( !isset( $fieldToUpdate ) || $fieldToUpdate == '' ) {
-                    $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
-                    $fieldToUpdate = get_option( $option_name )[$metaField['id']] ;
-                }
-                update_post_meta( $post_id, $metaField['id'], $fieldToUpdate );
-            } 
-        }
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 
+        if ( empty( $_POST ) ) return;
+        
+        if ( !isset( $_POST[$post->post_type . '_box_nonce'] ) ) return;
+
+        if ( !wp_verify_nonce( $_POST[$post->post_type . '_box_nonce'], UNB_PLUGIN_NAME ) ) return;
+
+        if ( 'page' == $_POST['post_type'] ) if ( !current_user_can( 'edit_page', $post_id ) ) return;
+        else if ( !current_user_can( 'edit_post', $post_id ) ) return;
+        
+        foreach( RegisterCPT::$metaFields[$post->post_type] as $metaField ) {
+            $fieldToUpdate = $_POST[$metaField['id']];
+            if ( ( !isset( $fieldToUpdate ) || $fieldToUpdate == '' ) && RegisterCPT::$metaColumns[$post_type]['option_name'] != '' ) {
+                $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
+                $fieldToUpdate = get_option( $option_name )[$metaField['id']] ;
+            }
+            update_post_meta( $post_id, $metaField['id'], $fieldToUpdate );
+        } 
     }
 
     /**
@@ -185,19 +190,18 @@ class RegisterCPT
 	 */
     public static function customColumnsList( $columns, $post_type ) {
         
-        if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
-            $columnData = RegisterCPT::$metaColumns[$post_type];
-            
-            foreach( $columnData['columnNames'] as $id => $name ) {
-                $columns[$id] = __( $name );
-            }
+        if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return $columns;
 
-            foreach( $columnData['unset'] as $unset ) {
-                unset( $columns[$unset] );
-            }
-        } 
+        $columnData = RegisterCPT::$metaColumns[$post_type];
         
+        foreach( $columnData['columnNames'] as $id => $name ) {
+            $columns[$id] = __( $name );
+        }
 
+        foreach( $columnData['unset'] as $unset ) {
+            unset( $columns[$unset] );
+        }
+        
         return $columns;
     }
 
@@ -211,11 +215,13 @@ class RegisterCPT
 
         $post_type = get_post_type( $post_id );
 
-        if ( array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) {
-            $data = get_post_meta( $post_id , $column , true );
-            if ( isset( $data ) && $data != '' ) 
-                echo $data;
-        }        
+        if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return;
+
+        // If the post type has a custom function to display the columns then this function won't proceed.
+        if ( isset( RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) && RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) return;
+        
+        $data = get_post_meta( $post_id , $column , true );
+        if ( isset( $data ) && $data != '' ) echo $data;
     }
 
     /**
@@ -252,7 +258,11 @@ class RegisterCPT
             RegisterCPT::$metaColumns[$metaBox['screen']]['unset'] = $metaBox['callback_args']['unsetColumns'];
 
             // Setting option name to get default values for the cpt
-            RegisterCPT::$metaColumns[$metaBox['screen']]['option_name'] = $metaBox['callback_args']['option_name'];
+            RegisterCPT::$metaColumns[$metaBox['screen']]['option_name'] = isset( $metaBox['callback_args']['option_name'] ) ? $metaBox['callback_args']['option_name'] : '';
+
+            // Setting whether this cpt has custom display columns so it doesn't run the default methods in this class 
+            // (eg. booking has a custom dispaly function in CustomRegisterCPT.php)
+            RegisterCPT::$metaColumns[$metaBox['screen']]['customDisplay'] = isset( $metaBox['callback_args']['customDisplay'] ) ? $metaBox['callback_args']['customDisplay'] : '';
         }
     }
 }

@@ -48,7 +48,6 @@ class WCManager
 	}
 
     //Step 2. Use that class to extend WooCommerce Data Store class
-    //add_filter( 'woocommerce_data_stores', 'room_woocommerce_data_stores' );
     function room_woocommerce_data_stores( $stores ) {
         $stores['product'] = 'Room_Product_Data_Store';
 
@@ -56,7 +55,6 @@ class WCManager
     }
 
     //Step 3. Return price dynamically from your CPT meta value
-    //add_filter('woocommerce_product_get_price', 'room_woocommerce_product_get_price', 10, 2 );
     function room_woocommerce_product_get_price( $price, $product ) {
 
         $product_id = $product->get_id();
@@ -88,7 +86,6 @@ class WCManager
         $isRoom = $wpdb->get_var("SELECT meta_value FROM {$wpdb->prefix}woocommerce_order_itemmeta WHERE order_item_id = {$id} AND meta_key = 'Room'");
 
         if ('yes' === $isRoom) { // load the new class if the item is our custom post
-            error_log('brug');
             $class_name = 'Room_WC_Order_Item_Product';
         }
 
@@ -167,46 +164,57 @@ class WCManager
     // Save booking order on woocommerce successful order placed
     function save_booking_order( $order_id ) {
         $order = new \WC_Order( $order_id );
-
-        $total = $order->get_total();
+        
+        $total = 0;
         $name = $order->get_formatted_billing_full_name();
         $email = $order->get_billing_email();
         $phone = $order->get_billing_phone();
 
-        // error_log( $total );
-        // error_log( $name );
-        // error_log( $email );
-        // error_log( $phone );
-
         foreach ( $order->get_items() as $item_id => $item ) {
 
             $product_id = $item->get_product_id();
+
+            $post_type = get_post_type( $product_id ); // If product isn't a room then it shouln't be added to the bookings
+            if ( strcmp( $post_type, 'room') != 0 ) continue;
+
+            $product_name = $item->get_name();
             $quantity = $item->get_quantity();
             $prod_total = $item->get_total();
-            $allmeta = $item->get_meta_data();
+            $total += $prod_total;
 
-            error_log( 'prod id: ' . $product_id );
-            // error_log( $quantity );
-            // error_log( $prod_total );
-            // error_log( json_encode( $allmeta ) );
+            // Getting meta values such as check in and check out dates
+            $check_in = $item->get_meta( 'Check in', true ); // Check in date
+            $check_out = $item->get_meta( 'Check out', true ); // Check out date
 
-            //$products[];
+            $products[$product_id] = array(
+                'name' => $product_name,
+                'quantity' => $quantity,
+                'total' => $prod_total,
+            );
+
+            $check_in_dates[$product_id] = $check_in;
+            $check_out_dates[$product_id] = $check_out;
         }
-        
 
+        $new_post = array(
+            'post_title' => 'Order ' . $order_id,
+            'post_status' => 'publish',
+            'post_date' => date('Y-m-d H:i:s'),
+            'post_type' => 'booking',
+            'meta_input' => array(
+                'booking_rooms' => $products,
+                'booking_check_in' => $check_in_dates,
+                'booking_check_out' => $check_out_dates,
+                'booking_price' => $total,
+                'booking_user' => $name,
+                'booking_email' => $email,
+                'booking_phone' => $phone,
+                'wc_order_id' => $order_id,
+            )
+        );
+        $post_id = wp_insert_post( $new_post );
 
-        // global $user_ID;
-        // $new_post = array(
-        //     'post_title' => 'Order ' . $order_id,
-        //     'post_status' => 'publish',
-        //     'post_date' => date('Y-m-d H:i:s'),
-        //     'post_type' => 'booking',
-        //     'meta_input' => array(
-        //         'booking_rooms' => $products,
-        //         //'booking_check_in' =>
-        //     )
-        // );
-        // $post_id = wp_insert_post($new_post);
+        $order->update_meta_data( 'Booking Id', $post_id );
     }
 }
 
