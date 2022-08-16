@@ -135,7 +135,7 @@ class WCManager
 
     // Display custom cart item meta data (in cart and checkout)
     function display_cart_item_custom_meta_data( $item_data, $cart_item ) {
-        $meta_keys = array( 'Check in', 'Check out' );
+        $meta_keys = array( 'Check in', 'Check out', 'Number of visitors' );
         foreach ( $meta_keys as $meta_key ){
             if ( isset( $cart_item[$meta_key] ) ) {
                 $item_data[] = array(
@@ -150,7 +150,7 @@ class WCManager
 
     // Save cart item custom meta as order item meta data and display it everywhere on orders and email notifications.
     function save_cart_item_custom_meta_as_order_item_meta( $item, $cart_item_key, $values, $order ) {
-        $meta_keys = array( 'Check in', 'Check out' );
+        $meta_keys = array( 'Check in', 'Check out', 'Number of visitors' );
         if ($values['data']->get_type() == 'room') {
             foreach ( $meta_keys as $meta_key ){
                 if ( isset( $values[$meta_key] ) ) {
@@ -194,7 +194,8 @@ class WCManager
             $check_out = $item->get_meta( 'Check out', true ); // Check out date
             $num_visitors = $item->get_meta( 'Number of visitors', true ); // Number of visitors
 
-            $products[$product_id] = array(
+            $products[] = array(
+                'id' => $product_id,
                 'name' => $product_name,
                 'quantity' => $quantity,
                 'check_in' => $check_in,

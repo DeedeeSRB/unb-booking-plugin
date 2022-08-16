@@ -42,6 +42,12 @@ class AjaxManager
 
         $room_id = $_POST['room_id'];
 
+        if ( !get_post_status ( $room_id ) ) {
+            $return['success'] = 2;
+            $return['message'] = 'This room doesn\'t seem to exist';
+            exit( json_encode( $return ) );
+        }
+
         // TODO: Check if the check in/out dates are real dates and that they are available.
         
         $check_in = $_POST['check_in'];
@@ -59,6 +65,15 @@ class AjaxManager
             exit( json_encode( $return ) );
         }
 
+        $num_visitors = $_POST['num_visitors'];
+
+        $max_num_visitors = get_post_meta( $room_id, 'room_max_num_vis', true );
+        if ( $max_num_visitors < $num_visitors) {
+            $return['success'] = 2;
+            $return['message'] = 'You can\'t book this room for more than ' . $max_num_visitors . ' visitors';
+            exit( json_encode( $return ) );
+        }
+
         $product_id = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $room_id ) );
         $quantity = 1;
         $passed_validation = apply_filters( 'woocommerce_add_to_cart_validation', true, $product_id, $quantity );
@@ -66,7 +81,8 @@ class AjaxManager
 
         $order_info = array(
             'Check in' => $check_in,
-            'Check out' => $check_out
+            'Check out' => $check_out,
+            'Number of visitors' => $num_visitors
         );
 
         if ( $passed_validation && WC()->cart->add_to_cart( $product_id, $quantity, 0, array(), $order_info ) && 'publish' === $product_status ) {

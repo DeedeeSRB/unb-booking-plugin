@@ -88,15 +88,15 @@ class CustomRegisterCPT
         $rooms = get_post_meta( $post_id , 'booking_rooms' , true );
         
         if ( strcmp( $column, 'booking_rooms' ) == 0 ) {
-            foreach ( $rooms as $id => $room ) {
-                $link = get_permalink( $id );
+            foreach ( $rooms as $room ) {
+                $link = get_permalink( $room['id'] );
                 $name = $room['name'];
                 $quantity = $room['quantity'];
                 echo '<a href=' . $link . '>' . $name . '</a>' . ' <b class="fw-bold">x</b>' . $quantity . '</br></br></br>';
             }
         }
         else if ( strcmp( $column, 'booking_check_in_out' ) == 0 ) {
-            foreach ( $rooms as $id => $room ) {
+            foreach ( $rooms as $room ) {
                 $check_in_date = new \DateTime( $room['check_in'] );
                 $check_out_date = new \DateTime( $room['check_out'] );
 
@@ -107,7 +107,7 @@ class CustomRegisterCPT
             }
         }
         else if ( strcmp( $column, 'booking_nights' ) == 0 ) {
-            foreach ( $rooms as $id => $room ) {
+            foreach ( $rooms as $room ) {
                 $check_in_date = new \DateTime( $room['check_in'] );
                 $check_out_date = new \DateTime( $room['check_out'] );
 

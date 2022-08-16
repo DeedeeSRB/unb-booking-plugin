@@ -76,10 +76,10 @@ class CPTMetaCallbacks
                 ?>
                 <div class="col"> 
                     <?php
-                    foreach ( $rooms as $id => $room ) {
-                        $link = get_permalink( $id );
+                    foreach ( $rooms as $room ) {
+                        $link = get_permalink( $room['id'] );
                         $price = strcmp( $pos, 'Left' ) == 0 ? $symbol . ' ' . $room['total'] :  $room['total'] . ' ' . $symbol;
-                        $img = get_the_post_thumbnail_url( $id, 'post-thumbnail' );
+                        $img = get_the_post_thumbnail_url( $room['id'], 'post-thumbnail' );
                         $check_in_date = new \DateTime( $room['check_in'] );
                         $check_out_date = new \DateTime( $room['check_out'] );
                         ?>
@@ -94,7 +94,7 @@ class CPTMetaCallbacks
                                         <div>Night(s): </div>
                                         <div>Number of visitor(s): </div>
                                         <div>Quantity: </div>
-                                        <div>Total Cost: </div>
+                                        <div>Total cost: </div>
                                     </div>
                                     <div class="col">
                                         <div><a href="<?= $link ?>"><?= $room['name'] ?></a></div>

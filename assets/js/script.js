@@ -19,11 +19,12 @@ function unb_book_room_submit(button) {
     nonce = $(button).attr("data-nonce");
     room_id = $(button).attr("data-room-id");
 
-    fd.append('nonce', 		nonce);
-    fd.append('action', 	"unb_book_room");
-    fd.append('room_id',	room_id);
-    fd.append('check_in',	$("#unb_room_check_in_form").val());
-    fd.append('check_out',	$("#unb_room_check_out_form").val());
+    fd.append('nonce', 		    nonce);
+    fd.append('action', 	    "unb_book_room");
+    fd.append('room_id',	    room_id);
+    fd.append('check_in',	    $("#unb_room_check_in_form").val());
+    fd.append('check_out',	    $("#unb_room_check_out_form").val());
+    fd.append('num_visitors',	$("#unb_room_num_visitors_form").val());
 
     ajax_submit(fd, unb_book_room_callback, "#unb_book_room_suc", "#unb_book_room_alert");
 }

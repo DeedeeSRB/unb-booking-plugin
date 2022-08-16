@@ -238,7 +238,7 @@ class CPTAdmin
                 'callback_args' => array(
                     'nonce' =>  'booking_box_nonce',
                     'fields' => $bookingMetaFields,
-                    'unsetColumns' => array( 'booking_email', 'booking_phone', 'booking_address', 'booking_num_people', 'booking_billing_details', 'wc_order_id' ),
+                    'unsetColumns' => array( 'date', 'booking_email', 'booking_phone', 'booking_address', 'booking_num_people', 'booking_billing_details', 'wc_order_id' ),
                     'customDisplay' => true,
                 )
             ),

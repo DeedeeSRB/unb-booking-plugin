@@ -9,7 +9,9 @@
                         <label for="unb_room_check_in_form" class="form-label">Check In</label>
                         <input class="form-control mb-3" id='unb_room_check_in_form' required/> 
                         <label for="unb_room_check_out_form" class="form-label">Check Out</label>
-                        <input class="form-control" id='unb_room_check_out_form' required/>
+                        <input class="form-control mb-3" id='unb_room_check_out_form' required/>
+                        <label for="unb_room_num_visitors_form" class="form-label">Number of visitors</label>
+                        <input type="number" class="form-control" id='unb_room_num_visitors_form' required/>
                     </div>
                 </div>
                 <div class="card mt-3">
