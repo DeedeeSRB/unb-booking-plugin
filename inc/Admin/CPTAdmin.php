@@ -127,25 +127,25 @@ class CPTAdmin
             array(
                 'id' => 'room_price',
                 'label' => 'Price',
-                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_price'] . ')', // If not set dont break
+                'place_holder' => isset( get_option( 'room_options' )['room_price'] ) ? '(Default: ' . get_option( 'room_options' )['room_price'] . ')' : '', 
             ),
             array(
                 'id' => 'room_max_num_vis',
                 'label' => 'Maximum number of visitors',
                 'columnName' => 'Max. No. of visitors',
-                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_max_num_vis'] . ')',
+                'place_holder' => isset( get_option( 'room_options' )['room_max_num_vis'] ) ? '(Default: ' . get_option( 'room_options' )['room_max_num_vis'] . ')' : '',
             ),
             array(
                 'id' => 'room_min_booking_days',
                 'label' => 'Minumum booking days',
                 'columnName' => 'Min. booking days',
-                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_min_booking_days'] . ')',
+                'place_holder' => isset( get_option( 'room_options' )['room_min_booking_days'] ) ? '(Default: ' . get_option( 'room_options' )['room_min_booking_days'] . ')' : '',
             ),
             array(
                 'id' => 'room_amenities',
                 'label' => 'Amenties',
                 'type' => 'textarea',
-                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_amenities'] . ')',
+                'place_holder' => isset( get_option( 'room_options' )['room_amenities'] ) ? '(Default: ' . get_option( 'room_options' )['room_amenities'] . ')' : '',
             ),
         ); 
 
