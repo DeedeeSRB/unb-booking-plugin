@@ -74,7 +74,7 @@ class CPTMetaCallbacks
         <?php 
             if ( $billingDetails != '' ) {
                 ?>
-                <div class="col"> 
+                <div class="col-8"> 
                     <?php
                     foreach ( $rooms as $room ) {
                         $link = get_permalink( $room['id'] );
@@ -108,7 +108,7 @@ class CPTMetaCallbacks
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <a href="<?= $link ?>"><img height=150px" src="<?= $img ?>" alt=""></a>
+                                <a href="<?= $link ?>"><img height=125px" src="<?= $img ?>" alt=""></a>
                             </div>
                         </div>
                         <?php
@@ -125,7 +125,7 @@ class CPTMetaCallbacks
             <?php 
             if ( $billingDetails != '' ) {
                 ?>
-                <div class="col"> 
+                <div class="col-4 ps-5"> 
                     <div class="fs-5 mb-3">Order details</div>
                     <div>Booking date</div>
                     <div class="mb-2 fw-bold"><?= $bookingDate ?></div>
