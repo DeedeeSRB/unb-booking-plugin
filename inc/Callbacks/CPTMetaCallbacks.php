@@ -60,7 +60,6 @@ class CPTMetaCallbacks
         $billingDetails = get_post_meta( $post_args->ID, 'booking_billing_details', true) !== null ? get_post_meta( $post_args->ID, 'booking_billing_details', true) : '';
         $totalPrice = get_post_meta( $post_args->ID, 'booking_price', true) !== null ? get_post_meta( $post_args->ID, 'booking_price', true) : '';
         $paymentMethod = get_post_meta( $post_args->ID, 'booking_payment_method', true) !== null ? get_post_meta( $post_args->ID, 'booking_payment_method', true) : '';
-        //$paymentPaid = get_post_meta( $post_args->ID, 'booking_payment_paid', true) !== null ? get_post_meta( $post_args->ID, 'booking_payment_paid', true) : '';
         $bookingDate = get_post_meta( $post_args->ID, 'booking_date', true) !== null ? get_post_meta( $post_args->ID, 'booking_date', true) : '';
         $wcOrderId = get_post_meta( $post_args->ID, 'wc_order_id', true) !== null ? get_post_meta( $post_args->ID, 'wc_order_id', true) : '';
 
@@ -158,7 +157,32 @@ class CPTMetaCallbacks
     }
 
     public static function bookingPaymentBox( $post_args, $callback_args ) {
-        echo '<div>Test</div>'; 
+        $paymentPaid = get_post_meta( $post_args->ID, 'booking_payment_paid', true) !== null ? get_post_meta( $post_args->ID, 'booking_payment_paid', true) : false;
+        ?>
+        <div class="row mt-2 pt-1">
+            <?php 
+            if ( $paymentPaid ) { ?>
+                <div class="col">
+                    <div style="background-color: LightGreen; width: fit-content; padding: 0px 7px 2px 7px; border-radius: 5px; color: Black;">Paid</div>
+                </div>
+                <div class="col text-end">
+                    <input type='hidden' value='false' name='booking_payment_paid_form'>
+                    <input type="checkbox" name="booking_payment_paid_form" id="booking_payment_paid_form" value='true' checked/>
+                    <label for="booking_payment_paid_form">Set Paid</label>
+                </div>
+            <?php }
+            else { ?>
+                <div class="col">
+                    <div style="background-color: Tomato; width: fit-content; padding: 0px 7px 2px 7px; border-radius: 5px; color: White;">Not Paid</div>
+                </div>
+                <div class="col text-end">
+                    <input type='hidden' value='false' name='booking_payment_paid_form'>
+                    <input class="m-0" type="checkbox" name="booking_payment_paid_form" id="booking_payment_paid_form" value='true'/>
+                    <label for="booking_payment_paid_form">Set Paid</label>
+                </div>
+            <?php } ?>
+        </div>
+        <?php
     }
 }
 

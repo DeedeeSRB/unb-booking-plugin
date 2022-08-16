@@ -127,7 +127,7 @@ class CPTAdmin
             array(
                 'id' => 'room_price',
                 'label' => 'Price',
-                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_price'] . ')',
+                'place_holder' => '(Default: ' . get_option( 'room_options' )['room_price'] . ')', // If not set dont break
             ),
             array(
                 'id' => 'room_max_num_vis',
@@ -233,7 +233,7 @@ class CPTAdmin
             ),
             array(
                 'id' => 'booking_room_content_box',
-                'title' => __( 'Booking details' ),
+                'title' => __( 'Booking status' ),
                 'callback' => array( 'CPTMetaCallbacks', 'bookingBox' ),
                 'screen' => 'booking',
                 'context' => 'normal',
@@ -245,20 +245,19 @@ class CPTAdmin
                     'customDisplay' => true,
                 )
             ),
-            // array(
-            //     'id' => 'booking_room_payment_content_box',
-            //     'title' => __( 'Payment details' ),
-            //     'callback' => array( 'CPTMetaCallbacks', 'bookingPaymentBox' ),
-            //     'screen' => 'booking',
-            //     'context' => 'side',
-            //     'priority' => 'high',
-            //     'callback_args' => array(
-            //         'nonce' =>  'booking_payment_box_nonce',
-            //         'fields' => $bookingPaymentMetaFields,
-            //         // 'unsetColumns' => array( 'booking_payment_paid' ),
-            //         'customDisplay' => true,
-            //     )
-            // ),
+            array(
+                'id' => 'booking_room_payment_content_box',
+                'title' => __( 'Payment details' ),
+                'callback' => array( 'CPTMetaCallbacks', 'bookingPaymentBox' ),
+                'screen' => 'booking',
+                'context' => 'side',
+                'priority' => 'high',
+                'callback_args' => array(
+                    'nonce' =>  'booking_payment_box_nonce',
+                    'fields' => $bookingPaymentMetaFields,
+                    'customDisplay' => true,
+                )
+            ),
         );
 
         $this->registerCPT->setCPTMetas($metaBoxes);

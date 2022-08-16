@@ -57,18 +57,9 @@ class CustomRegisterCPT
         if ( 'page' == $_POST['post_type'] ) if ( !current_user_can( 'edit_page', $post_id ) ) return;
         else if ( !current_user_can( 'edit_post', $post_id ) ) return;
         
-        if ( isset( $_POST['booking_check_in'] ) ) {
-            foreach( $_POST['booking_check_in'] as $id => $date ) {
-                $booking_check_in[$id] = $date;
-            } 
-            update_post_meta( $post_id, 'booking_check_in', $booking_check_in );
-        }
-
-        if ( isset( $_POST['booking_check_out'] ) ) {
-            foreach( $_POST['booking_check_out'] as $id => $date ) {
-                $booking_check_out[$id] = $date;
-            } 
-            update_post_meta( $post_id, 'booking_check_out', $booking_check_out );
+        if ( isset( $_POST['booking_payment_paid_form'] ) ) {
+            $paid = strcmp( $_POST['booking_payment_paid_form'], 'true' ) == 0 ? true : false;
+            update_post_meta( $post_id, 'booking_payment_paid', $paid );
         }
         
     }
@@ -126,7 +117,7 @@ class CustomRegisterCPT
         else if ( strcmp( $column, 'booking_payment_paid' ) == 0 ) {
             $paid = get_post_meta( $post_id , $column , true );
             if ( $paid ) {
-                echo '<div style="background-color: LightGreen; width: fit-content; padding: 0px 7px 2px 7px; border-radius: 5px; color: White;">Paid</div>';
+                echo '<div style="background-color: LightGreen; width: fit-content; padding: 0px 7px 2px 7px; border-radius: 5px; color: Black;">Paid</div>';
             }
             else {
                 echo '<div style="background-color: Tomato; width: fit-content; padding: 0px 7px 2px 7px; border-radius: 5px; color: White;">Not Paid</div>';
