@@ -84,7 +84,6 @@ class CustomRegisterCPT
 
         $post_type = get_post_type( $post_id );
 
-        //$data = get_post_meta( $post_id , $column , true );
         $rooms = get_post_meta( $post_id , 'booking_rooms' , true );
         
         if ( strcmp( $column, 'booking_rooms' ) == 0 ) {
@@ -145,6 +144,13 @@ class CustomRegisterCPT
             }
             else {
                 echo '<div style="background-color: #FF9933; width: fit-content; padding: 0px 7px 2px 7px; border-radius: 5px; color: White;">' . $status  . '</div>';
+            }
+        }
+        else if ( strcmp( $column, 'booking_num_visitors' ) == 0 ) {
+            foreach ( $rooms as $room ) {
+                $name = $room['name'];
+                $quantity = $room['quantity'];
+                echo '<div>' . $room['num_visitors'] . ' Visitor(s)</div></br></br>';
             }
         }
         else {
