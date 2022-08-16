@@ -25,7 +25,7 @@ function register_wcclasses() {
             $product->set_defaults();
             $post_object = get_post( $product->get_id() );
 
-            if ( ! $product->get_id() || ! $post_object || 'room' !== $post_object->post_type ) {
+            if ( ! $product->get_id() || ! $post_object || !in_array( $post_object->post_type, ['room', 'product'] ) ) {
                 throw new Exception( __( 'Invalid product.', 'woocommerce' ) );
             }
 
@@ -46,13 +46,15 @@ function register_wcclasses() {
                     'reviews_allowed'   => 'open' === $post_object->comment_status,
                 )
             );
-    
+
             $this->read_attributes( $product );
             $this->read_downloads( $product );
             $this->read_visibility( $product );
             $this->read_product_data( $product );
             $this->read_extra_data( $product );
             $product->set_object_read( true );
+
+            do_action( 'woocommerce_product_read', $product->get_id() );
         }
 
         /**

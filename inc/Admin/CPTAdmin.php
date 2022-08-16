@@ -183,10 +183,6 @@ class CPTAdmin
                 'label' => 'Payment Method',
             ),
             array(
-                'id' => 'booking_payment_paid',
-                'label' => 'Payment',
-            ),
-            array(
                 'id' => 'booking_date',
                 'label' => 'Booking Date',
             ),
@@ -194,7 +190,14 @@ class CPTAdmin
                 'id' => 'wc_order_id',
                 'label' => 'WC Order ID',
             ),
-        ); 
+        );
+        
+        $bookingPaymentMetaFields = array(
+            array(
+                'id' => 'booking_payment_paid',
+                'label' => 'Payment',
+            ),
+        );
 
         /**
          *  The metaBoxes array will hold all the meta boxes that should be displayed for a specific CPT.
@@ -242,6 +245,20 @@ class CPTAdmin
                     'customDisplay' => true,
                 )
             ),
+            // array(
+            //     'id' => 'booking_room_payment_content_box',
+            //     'title' => __( 'Payment details' ),
+            //     'callback' => array( 'CPTMetaCallbacks', 'bookingPaymentBox' ),
+            //     'screen' => 'booking',
+            //     'context' => 'side',
+            //     'priority' => 'high',
+            //     'callback_args' => array(
+            //         'nonce' =>  'booking_payment_box_nonce',
+            //         'fields' => $bookingPaymentMetaFields,
+            //         // 'unsetColumns' => array( 'booking_payment_paid' ),
+            //         'customDisplay' => true,
+            //     )
+            // ),
         );
 
         $this->registerCPT->setCPTMetas($metaBoxes);

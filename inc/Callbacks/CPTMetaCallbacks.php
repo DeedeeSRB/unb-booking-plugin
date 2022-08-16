@@ -156,5 +156,9 @@ class CPTMetaCallbacks
         </div>
         <?php
     }
+
+    public static function bookingPaymentBox( $post_args, $callback_args ) {
+        echo '<div>Test</div>'; 
+    }
 }
 

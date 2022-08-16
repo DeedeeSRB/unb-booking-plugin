@@ -156,28 +156,37 @@ class RegisterCPT
         
         $post_type = get_post_type( $post_id );
 
+        // If the given post type isn't part of our plugin then this function won't affect it.
         if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return;
 
         // If the post type has a custom function to display the columns then this function won't proceed.
         if ( isset( RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) && RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) return;
 
+        // If it tries to auto save, we won't actually save the data.
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 
+        // If no post data is provided we won't continue.
         if ( empty( $_POST ) ) return;
         
+        // We check if the post type box nonce exsist.
         if ( !isset( $_POST[$post->post_type . '_box_nonce'] ) ) return;
 
+        // We verify the nonce.
         if ( !wp_verify_nonce( $_POST[$post->post_type . '_box_nonce'], UNB_PLUGIN_NAME ) ) return;
 
+        // If the user isn't authorized to edit this post then we won't continue.
         if ( 'page' == $_POST['post_type'] ) if ( !current_user_can( 'edit_page', $post_id ) ) return;
         else if ( !current_user_can( 'edit_post', $post_id ) ) return;
         
+        // For all the custom fields in this post type, we get the values from the post and saving them.
+        // If their value is empty we check if they have a default value.
         foreach( RegisterCPT::$metaFields[$post->post_type] as $metaField ) {
             $fieldToUpdate = $_POST[$metaField['id']];
             if ( ( !isset( $fieldToUpdate ) || $fieldToUpdate == '' ) && RegisterCPT::$metaColumns[$post_type]['option_name'] != '' ) {
                 $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
                 $fieldToUpdate = get_option( $option_name )[$metaField['id']] ;
             }
+            // Save or update the meta.
             update_post_meta( $post_id, $metaField['id'], $fieldToUpdate );
         } 
     }
@@ -246,21 +255,44 @@ class RegisterCPT
         RegisterCPT::$metaBoxes = array_merge( RegisterCPT::$metaBoxes, $metaBoxes );
 
         foreach ( $metaBoxes as $metaBox ) {
-            // Setting the meta fields
-            RegisterCPT::$metaFields[$metaBox['screen']] = $metaBox['callback_args']['fields'];
 
-            // Setting columns for the CPT for the new meta data
-            foreach ( $metaBox['callback_args']['fields'] as $field ) {
-                RegisterCPT::$metaColumns[$metaBox['screen']]['columnNames'][$field['id']] = isset($field['columnName']) ? $field['columnName'] : $field['label'];
-            } 
+            /**
+             * Setting the meta fields
+             * 
+             * 1) If the array is not initialized then we initialize it.
+             * 2) We get the fields from the callback_args.
+             * 3) If the fields are not set then we just give an empty array.
+             * 4) We merge the new fields to the old fields. 
+             * 
+             * */ 
+            if ( !isset( RegisterCPT::$metaFields[$metaBox['screen']] ) ) RegisterCPT::$metaFields[$metaBox['screen']] = array();
+            $fields =isset( $metaBox['callback_args']['fields'] )  ? $metaBox['callback_args']['fields'] : array();
+            RegisterCPT::$metaFields[$metaBox['screen']] = array_merge( RegisterCPT::$metaFields[$metaBox['screen']], $fields );
 
-            // Unsetting any default columns
-            RegisterCPT::$metaColumns[$metaBox['screen']]['unset'] = $metaBox['callback_args']['unsetColumns'];
+            // Setting columns for the CPT for the new meta data if fields are set
+            if ( isset( $metaBox['callback_args']['fields'] ) ) {
+                foreach ( $metaBox['callback_args']['fields'] as $field ) {
+                    RegisterCPT::$metaColumns[$metaBox['screen']]['columnNames'][$field['id']] = isset( $field['columnName']) ? $field['columnName'] : $field['label'];
+                } 
+            }
 
-            // Setting option name to get default values for the cpt
+            /**
+             * Unsetting any default columns and custom fields
+             * 
+             * 1) If the array is not initialized then we initialize it.
+             * 2) We get the unset columns from the callback_args.
+             * 3) If the unset columns are not set then we just give an empty array.
+             * 4) We merge the new unset columns to the old unset columns. 
+             * 
+             * */ 
+            if ( !isset( RegisterCPT::$metaColumns[$metaBox['screen']]['unset'] ) ) RegisterCPT::$metaColumns[$metaBox['screen']]['unset'] = array();
+            $unset = isset( $metaBox['callback_args']['unsetColumns'] ) ? $metaBox['callback_args']['unsetColumns'] : array();
+            RegisterCPT::$metaColumns[$metaBox['screen']]['unset'] = array_merge( RegisterCPT::$metaColumns[$metaBox['screen']]['unset'], $unset );
+
+            // Setting option name to get default values for the cpt if it is set
             RegisterCPT::$metaColumns[$metaBox['screen']]['option_name'] = isset( $metaBox['callback_args']['option_name'] ) ? $metaBox['callback_args']['option_name'] : '';
 
-            // Setting whether this cpt has custom display columns so it doesn't run the default methods in this class 
+            // Setting whether this cpt has custom display columns if it is set. So it doesn't run the default methods in this class.
             // (eg. booking has a custom dispaly function in CustomRegisterCPT.php)
             RegisterCPT::$metaColumns[$metaBox['screen']]['customDisplay'] = isset( $metaBox['callback_args']['customDisplay'] ) ? $metaBox['callback_args']['customDisplay'] : '';
         }
