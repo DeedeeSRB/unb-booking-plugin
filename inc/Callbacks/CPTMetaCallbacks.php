@@ -55,13 +55,15 @@ class CPTMetaCallbacks
     public static function bookingBox( $post_args, $callback_args )
 	{
 		wp_nonce_field( UNB_PLUGIN_NAME, $callback_args['args']['nonce'] );
-        $rooms = get_post_meta( $post_args->ID, 'booking_rooms', true);
-        $checkInValue = get_post_meta( $post_args->ID, 'booking_check_in', true);
-        $checkOutValue = get_post_meta( $post_args->ID, 'booking_check_out', true);
-        $totalPrice = get_post_meta( $post_args->ID, 'booking_price', true);
-        $userFirstname = get_post_meta( $post_args->ID, 'booking_user', true);
-        $userEmail = get_post_meta( $post_args->ID, 'booking_email', true);
-        $userPhone = get_post_meta( $post_args->ID, 'booking_phone', true);
+        
+        $rooms = get_post_meta( $post_args->ID, 'booking_rooms', true) !== null ? get_post_meta( $post_args->ID, 'booking_rooms', true) : '';
+        $billingDetails = get_post_meta( $post_args->ID, 'booking_billing_details', true) !== null ? get_post_meta( $post_args->ID, 'booking_billing_details', true) : '';
+        $totalPrice = get_post_meta( $post_args->ID, 'booking_price', true) !== null ? get_post_meta( $post_args->ID, 'booking_price', true) : '';
+        $paymentMethod = get_post_meta( $post_args->ID, 'booking_payment_method', true) !== null ? get_post_meta( $post_args->ID, 'booking_payment_method', true) : '';
+        //$paymentPaid = get_post_meta( $post_args->ID, 'booking_payment_paid', true) !== null ? get_post_meta( $post_args->ID, 'booking_payment_paid', true) : '';
+        $bookingDate = get_post_meta( $post_args->ID, 'booking_date', true) !== null ? get_post_meta( $post_args->ID, 'booking_date', true) : '';
+        $wcOrderId = get_post_meta( $post_args->ID, 'wc_order_id', true) !== null ? get_post_meta( $post_args->ID, 'wc_order_id', true) : '';
+
         ?>
         <div class="row">
             <div class="col"> 
@@ -73,43 +75,65 @@ class CPTMetaCallbacks
                     $link = get_permalink( $id );
                     $price = strcmp( $pos, 'Left' ) == 0 ? $symbol . ' ' . $room['total'] :  $room['total'] . ' ' . $symbol;
                     $img = get_the_post_thumbnail_url( $id, 'post-thumbnail' );
+                    $check_in_date = new \DateTime( $room['check_in'] );
+                    $check_out_date = new \DateTime( $room['check_out'] );
                     ?>
-                    <div class="row mb-5">
-                        <div class="col"> 
-                            <div class="fs-5 mb-3">Order dates</div>
-                            <label for="booking_check_in[<?= $id ?>]">Check in</label>
-                            <input type="text" class="regular-text mb-2" id="booking_check_in[<?= $id ?>]" name="booking_check_in[<?= $id ?>]" value="<?= $checkInValue[$id] ?>"/></br>
-                            <label for="booking_check_out[<?= $id ?>]">Check Out</label>
-                            <input type="text" class="regular-text" id="booking_check_out[<?= $id ?>]" name="booking_check_out[<?= $id ?>]" value="<?= $checkOutValue[$id] ?>"/>
-                        </div>
+                    <div class="fs-5 mb-3">Room details</div>
+                    <div class="row">
                         <div class="col">
-                            <div class="fs-5 mb-3">Room details</div>
                             <div class="row">
-                                <div class="col-auto">
-                                    <div>Room: <a href="<?= $link ?>"><?= $room['name'] ?></a></div>
-                                    <div>Quantity: <b class="fw-bold"> x</b><?= $room['quantity'] ?></div>
-                                    <div>Total Cost: <b class="fw-bold"><?= $price ?></b></div>
+                                <div class="col">
+                                    <div>Room: </div>
+                                    <div>Check in: </div>
+                                    <div>Check out: </div>
+                                    <div>Night(s): </div>
+                                    <div>Number of visitor(s): </div>
+                                    <div>Quantity: </div>
+                                    <div>Total Cost: </div>
                                 </div>
-                                <div class="col text-center">
-                                    <a href="<?= $link ?>"><img height=150px" src="<?= $img ?>" alt=""></a>
+                                <div class="col">
+                                    <div><a href="<?= $link ?>"><?= $room['name'] ?></a></div>
+                                    <div><?= date_format( $check_in_date, "d M Y" ) ?></div>
+                                    <div><?= date_format( $check_out_date, "d M Y" ) ?></div>
+                                    <div><?= $check_in_date->diff($check_out_date)->format('%a') ?> Night(s)</div>
+                                    <div><?= $room['num_visitors'] ?> Visitor(s)</div>
+                                    <div><b class="mb-2 fw-bold"> x</b><?= $room['quantity'] ?></div>
+                                    <div><b class="mb-2 fw-bold"><?= $price ?></b></div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-auto">
+                            <a href="<?= $link ?>"><img height=150px" src="<?= $img ?>" alt=""></a>
                         </div>
                     </div>
                     <?php
                 }
                 ?>
             </div>
-            <div class="col-auto mx-5 px-5"> 
-                <div class="fs-5 mb-3">Orderer details</div>
+            <?php 
+            if ( $billingDetails != '' ) {
+            ?>
+            <div class="col"> 
+                <div class="fs-5 mb-3">Order details</div>
+                <div>Booking date</div>
+                <div class="mb-2 fw-bold"><?= $bookingDate ?></div>
+                <div>Payment method</div>
+                <div class="mb-2 fw-bold"><?= $paymentMethod ?></div>
                 <div>Order by</div>
-                <div class="mb-2 fw-bold"><?= $userFirstname ?></div>
+                <div class="mb-2 fw-bold"><?= isset( $billingDetails['full_name'] ) ? $billingDetails['full_name'] : '' ?></div>
                 <div>Email</div>
-                <div class="mb-2 fw-bold"><?= $userEmail ?></div>
+                <div class="mb-2 fw-bold"><?= isset( $billingDetails['email'] ) ? $billingDetails['email'] : ''  ?></div>
                 <div>Phone number</div>
-                <div class="mb-2 fw-bold"><?= $userPhone ?></div>
+                <div class="mb-2 fw-bold"><?= isset( $billingDetails['phone'] ) ? $billingDetails['phone'] : ''  ?></div>
+                <div>Address</div>
+                <div class="mb-2 fw-bold"><?= isset( $billingDetails['address'] ) ? $billingDetails['address'] : ''  ?></div>
+                <div>City</div>
+                <div class="mb-2 fw-bold"><?= isset( $billingDetails['city'] ) ? $billingDetails['city'] : ''  ?></div>
+                <div>Zip / Postal Code</div>
+                <div class="mb-2 fw-bold"><?= isset( $billingDetails['zip'] ) ? $billingDetails['zip'] : ''  ?></div>
             </div>
-            
+            <?php
+            } ?>
         </div>
         <?php
     }

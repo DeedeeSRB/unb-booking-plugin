@@ -78,16 +78,12 @@ class CPTAdmin
                     'menu_icon' => 'dashicons-admin-multisite',
                     'public' => true,
                     'has_archive' => true,
-                    //'hierarchical' => true, // IF ITS TRUE THE TABLE WON'T BE FILLED 
-                    //'taxonomies' => array( 'categories' ),
+                    'taxonomies' => array( 'tags', 'categories' ),
                 )
             ),
             array(
                 'supports' => array(
                     'title',
-                    'editor',
-                    'thumbnail',
-                    'page-attributes',
                 ),
                 'name' => 'Bookings',
                 'singular_name' => 'Booking',
@@ -155,32 +151,44 @@ class CPTAdmin
 
         $bookingMetaFields = array(
             array(
+                'id' => 'booking_status',
+                'label' => 'Status',
+            ),
+            array(
                 'id' => 'booking_rooms',
-                'label' => 'Booked rooms',
+                'label' => 'Room(s)',
             ),
             array(
-                'id' => 'booking_check_in',
-                'label' => 'Check in',
+                'id' => 'booking_num_visitors',
+                'label' => 'Visitor(s)',
             ),
             array(
-                'id' => 'booking_check_out',
-                'label' => 'Check out',
+                'id' => 'booking_check_in_out',
+                'label' => 'Check in / out',
+            ),
+            array(
+                'id' => 'booking_nights',
+                'label' => 'Night(s)',
+            ),
+            array(
+                'id' => 'booking_billing_details',
+                'label' => 'Billing Details',
             ),
             array(
                 'id' => 'booking_price',
                 'label' => 'Total Price',
             ),
             array(
-                'id' => 'booking_user',
-                'label' => 'Booked user full name',
+                'id' => 'booking_payment_method',
+                'label' => 'Payment Method',
             ),
             array(
-                'id' => 'booking_email',
-                'label' => 'Booked user email',
+                'id' => 'booking_payment_paid',
+                'label' => 'Payment',
             ),
             array(
-                'id' => 'booking_phone',
-                'label' => 'Booked user phone number',
+                'id' => 'booking_date',
+                'label' => 'Booking Date',
             ),
             array(
                 'id' => 'wc_order_id',
@@ -230,7 +238,7 @@ class CPTAdmin
                 'callback_args' => array(
                     'nonce' =>  'booking_box_nonce',
                     'fields' => $bookingMetaFields,
-                    'unsetColumns' => array( 'booking_email', 'booking_phone', 'wc_order_id' ),
+                    'unsetColumns' => array( 'booking_email', 'booking_phone', 'booking_address', 'booking_num_people', 'booking_billing_details', 'wc_order_id' ),
                     'customDisplay' => true,
                 )
             ),

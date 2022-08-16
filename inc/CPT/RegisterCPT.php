@@ -122,7 +122,7 @@ class RegisterCPT
             $args = array_merge( $args, $cpt['args'] );
             
             register_post_type( strtolower( $singular_name ), $args);
-            register_taxonomy( 'categories', strtolower( $singular_name ) );
+            //register_taxonomy( 'categories', strtolower( $singular_name ) );
         }
     }
 

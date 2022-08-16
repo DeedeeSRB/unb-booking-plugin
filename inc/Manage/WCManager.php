@@ -166,9 +166,16 @@ class WCManager
         $order = new \WC_Order( $order_id );
         
         $total = 0;
-        $name = $order->get_formatted_billing_full_name();
-        $email = $order->get_billing_email();
-        $phone = $order->get_billing_phone();
+
+        $billing_info = array(
+            'full_name' => $order->get_formatted_billing_full_name(),
+            'email' => $order->get_billing_email(),
+            'phone' => $order->get_billing_phone(),
+            'address' => $order->get_billing_address_1(),
+            'country' => $order->get_billing_country(),
+            'city' => $order->get_billing_city(),
+            'zip' => $order->get_billing_postcode(),
+        );
 
         foreach ( $order->get_items() as $item_id => $item ) {
 
@@ -182,33 +189,36 @@ class WCManager
             $prod_total = $item->get_total();
             $total += $prod_total;
 
-            // Getting meta values such as check in and check out dates
+            // Getting meta values such as check in / out dates and number of visitors
             $check_in = $item->get_meta( 'Check in', true ); // Check in date
             $check_out = $item->get_meta( 'Check out', true ); // Check out date
+            $num_visitors = $item->get_meta( 'Number of visitors', true ); // Number of visitors
 
             $products[$product_id] = array(
                 'name' => $product_name,
                 'quantity' => $quantity,
+                'check_in' => $check_in,
+                'check_out' => $check_out,
+                'num_visitors' => $num_visitors,
                 'total' => $prod_total,
             );
-
-            $check_in_dates[$product_id] = $check_in;
-            $check_out_dates[$product_id] = $check_out;
         }
+
+        $status = $order->get_status();
+        $payment_method = $order->get_payment_method_title();
 
         $new_post = array(
             'post_title' => 'Order ' . $order_id,
             'post_status' => 'publish',
-            'post_date' => date('Y-m-d H:i:s'),
             'post_type' => 'booking',
             'meta_input' => array(
                 'booking_rooms' => $products,
-                'booking_check_in' => $check_in_dates,
-                'booking_check_out' => $check_out_dates,
+                'booking_status' => $status,
+                'booking_billing_details' => $billing_info,
                 'booking_price' => $total,
-                'booking_user' => $name,
-                'booking_email' => $email,
-                'booking_phone' => $phone,
+                'booking_payment_method' => $payment_method,
+                'booking_payment_paid' => false,
+                'booking_date' => date('Y-m-d H:i:s'),
                 'wc_order_id' => $order_id,
             )
         );
