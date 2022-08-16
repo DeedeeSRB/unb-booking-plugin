@@ -32,7 +32,10 @@ class WCManager
 	{
         require UNB_PLUGIN_PATH . 'inc/WCClasses/WCClasses.php';
         add_action( 'init', 'register_wcclasses' );
+        add_action( 'init', array( $this, 'registerWCHooks' ) );
+	}
 
+    public function registerWCHooks() {
         add_filter( 'woocommerce_data_stores', array( $this , 'room_woocommerce_data_stores' ) );
         add_filter( 'woocommerce_product_get_price', array( $this , 'room_woocommerce_product_get_price' ), 10, 2 );
 
@@ -45,7 +48,7 @@ class WCManager
         add_action( 'woocommerce_checkout_create_order_line_item', array( $this , 'save_cart_item_custom_meta_as_order_item_meta' ), 10, 4 );
         
         add_action( 'woocommerce_checkout_order_processed', array( $this , 'save_booking_order' ),  10, 1  );
-	}
+    }
 
     //Step 2. Use that class to extend WooCommerce Data Store class
     function room_woocommerce_data_stores( $stores ) {
