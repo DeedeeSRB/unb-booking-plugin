@@ -77,7 +77,7 @@ class AjaxManager
         // We fetch the minimum booking days for the room from the post meta
         $min_booking_days = get_post_meta( $room_id, 'room_min_booking_days', true );
         // We calculate the days that the user wants to book this room for
-        $booking_days = $check_in_date->diff($check_out_date)->format('%a');
+        $booking_days = $check_in_date->diff( $check_out_date )->format('%a');
 
         // If the user's booking days is less than this room's minimum booking days, we won't continue the process and notify the user of why it can't continue.
         if ( $booking_days < $min_booking_days) {
@@ -86,6 +86,13 @@ class AjaxManager
             exit( json_encode( $return ) );
         }
 
+        // We call a function to check if the room is available for the dates the user have chosen
+        $availability = $this->checkAvailability( $check_in_date, $check_out_date, $room_id );
+        if ( !$availability ) {
+            $return['success'] = 2;
+            $return['message'] = 'This room isn\'t available for the dates you have chosen';
+            exit( json_encode( $return ) );
+        }
 
         // We fetch the number of visitors
         $num_visitors = $_POST['num_visitors'];
@@ -142,6 +149,68 @@ class AjaxManager
         $return['url'] = wc_get_cart_url();
         $return['message'] = "Product successfuly added to the cart!";
         exit( json_encode( $return ) );
+    }
+
+    /**
+	 * Utility function to check if the dates chosen by the user are available for the chosen room.
+     * The parameters $check_in_date and $check_out_date are provided.
+     * 
+     * If available return true, otherwise return false.
+     * 
+	 * @since 1.0.0
+	 * @access public
+     * @return boolean
+	 */
+    public function checkAvailability( $check_in_date, $check_out_date, $room_id ) {
+        // Setup the arguments to get all the bookings we have
+        $queryArgs = array(
+            'post_type' => 'booking',
+            'post_status' => 'publish',
+            'posts_per_page' => -1,
+        );
+
+        // Store the bookings in this variable
+        $bookings = get_posts( $queryArgs );
+
+        // Go through all the bookings to check the dates
+        foreach ( $bookings as $booking ) {
+
+            // Rake a look at the rooms in that booking (1 booking can have more than 1 room)
+            $bk_rooms = get_post_meta( $booking->ID, 'booking_rooms', true );
+            foreach ( $bk_rooms as $bk_room ) {
+
+                // If the chosen room isn't the same type as the previously booked room then we shouldn't check the availablity since its a different room.
+                if ( $bk_room['id'] != $room_id ) continue;
+
+                // Rake the check in and out dates from that booked room
+                $rm_check_in = $bk_room['check_in'];
+                $rm_check_out = $bk_room['check_out'];
+
+                // Convert them in to DateTime so we can comapre them
+                $rm_check_in_date = new \DateTime( $rm_check_in );
+                $rm_check_out_date = new \DateTime( $rm_check_out );
+
+                // Validation algorithm to check if the dates are available
+                // 1) If the chosen check in date is between or one the previously booked room check in and out dates, then the room won't be available
+                if ( $check_in_date >= $rm_check_in_date && $check_in_date <= $rm_check_out_date ) {
+                    return false;
+                }
+                // 2) If the chosen check in date is before the previously booked room check in date
+                else if ( $check_in_date < $rm_check_in_date ) {
+                    // 3) If the chosen check out date is between or one the previously booked room check in and out dates, then the room won't be available
+                    if ( $check_out_date >= $rm_check_in_date && $check_out_date <= $rm_check_out_date ) {
+                        return false;
+                    }
+                    // 4) If the chosen check out date is after the previously booked room check out date, then the room won't be available
+                    else if ( $check_out_date > $rm_check_out_date ) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // Return true if available
+        return true;
     }
 
 }
