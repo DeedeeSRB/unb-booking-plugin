@@ -94,6 +94,7 @@ class CPTAdmin
                     'capabilities' => array(
                         'create_posts' => false, // Removes support for the "Add New" function ( use 'do_not_allow' instead of false for multisite set ups )
                     ),
+                    'map_meta_cap' => true,
                 ),
             ),
         );
