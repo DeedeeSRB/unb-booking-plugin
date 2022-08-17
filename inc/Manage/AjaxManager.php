@@ -87,7 +87,7 @@ class AjaxManager
         }
 
         // We call a function to check if the room is available for the dates the user have chosen
-        $availability = $this->checkAvailability( $check_in_date, $check_out_date, $room_id );
+        $availability = AjaxManager::checkAvailability( $check_in_date, $check_out_date, $room_id );
         if ( !$availability ) {
             $return['success'] = 2;
             $return['message'] = 'This room isn\'t available for the dates you have chosen';
@@ -161,7 +161,7 @@ class AjaxManager
 	 * @access public
      * @return boolean
 	 */
-    public function checkAvailability( $check_in_date, $check_out_date, $room_id ) {
+    public static function checkAvailability( $check_in_date, $check_out_date, $room_id ) {
         // Setup the arguments to get all the bookings we have
         $queryArgs = array(
             'post_type' => 'booking',

@@ -15,6 +15,8 @@
 
 namespace UnbBooking\Manage;
 
+use UnbBooking\Manage\AjaxManager;
+
 //use UnbBooking\WCClasses;
 
 /**
@@ -48,6 +50,8 @@ class WCManager
         add_action( 'woocommerce_checkout_create_order_line_item', array( $this , 'save_cart_item_custom_meta_as_order_item_meta' ), 10, 4 );
         
         add_action( 'woocommerce_checkout_order_processed', array( $this , 'save_booking_order' ),  10, 1  );
+
+        add_action( 'woocommerce_checkout_create_order', array( $this , 'check_date_availability' ), 10, 1 ); 
     }
 
     //Step 2. Use that class to extend WooCommerce Data Store class
@@ -229,6 +233,34 @@ class WCManager
         $post_id = wp_insert_post( $new_post );
 
         $order->update_meta_data( 'Booking Id', $post_id );
+    }
+
+    public function check_date_availability( $order ) {
+        
+        require_once plugin_dir_path( UNB_BOOKING ) . '/inc/Manage/AjaxManager.php';
+        foreach ( $order->get_items() as $item_id => $item ) {
+
+            $product_id = $item->get_product_id();
+
+            $post_type = get_post_type( $product_id ); // If product isn't a room then it shouln't be checked for availability
+            if ( strcmp( $post_type, 'room') != 0 ) continue;
+
+            // Getting meta values such as check in / out dates 
+            $check_in = $item->get_meta( 'Check in', true ); // Check in date
+            $check_out = $item->get_meta( 'Check out', true ); // Check out date
+
+            // We convert them into DateTime variables so we can compare them easily
+            $check_in_date = new \DateTime( $check_in );
+            $check_out_date = new \DateTime( $check_out );
+
+            // We call a function to check if the room is available for the dates the user have chosen
+            $availability = AjaxManager::checkAvailability( $check_in_date, $check_out_date, $product_id );
+            if ( !$availability ) {
+                throw new \Exception( __( 'One of the rooms you have added is no longer available for the dates you have chosen' ) );
+            }
+        }
+
+        return $order;
     }
 }
 
