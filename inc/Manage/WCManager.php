@@ -38,20 +38,23 @@ class WCManager
 	}
 
     public function registerWCHooks() {
-        add_filter( 'woocommerce_data_stores', array( $this , 'room_woocommerce_data_stores' ) );
-        add_filter( 'woocommerce_product_get_price', array( $this , 'room_woocommerce_product_get_price' ), 10, 2 );
+        add_filter( 'woocommerce_data_stores', array( $this, 'room_woocommerce_data_stores' ) );
+        add_filter( 'woocommerce_product_get_price', array( $this, 'room_woocommerce_product_get_price' ), 10, 2 );
 
-        add_filter( 'woocommerce_product_class', array( $this , 'room_woo_product_class' ), 20, 3  );
-        add_filter( 'woocommerce_get_order_item_classname', array( $this , 'room_woocommerce_get_order_item_classname' ) , 20, 3 );
-        add_filter( 'woocommerce_product_type_query', array( $this , 'room_woo_product_type' ), 12, 2 );
-        add_filter( 'woocommerce_checkout_create_order_line_item_object', array( $this , 'room_woocommerce_checkout_create_order_line_item_object' ), 20, 4 );
+        add_filter( 'woocommerce_product_class', array( $this, 'room_woo_product_class' ), 20, 3  );
+        add_filter( 'woocommerce_get_order_item_classname', array( $this, 'room_woocommerce_get_order_item_classname' ) , 20, 3 );
+        add_filter( 'woocommerce_product_type_query', array( $this, 'room_woo_product_type' ), 12, 2 );
+        add_filter( 'woocommerce_checkout_create_order_line_item_object', array( $this, 'room_woocommerce_checkout_create_order_line_item_object' ), 20, 4 );
 
-        add_filter( 'woocommerce_get_item_data', array( $this , 'display_cart_item_custom_meta_data' ), 10, 2 );
-        add_action( 'woocommerce_checkout_create_order_line_item', array( $this , 'save_cart_item_custom_meta_as_order_item_meta' ), 10, 4 );
+        add_filter( 'woocommerce_get_item_data', array( $this, 'display_cart_item_custom_meta_data' ), 10, 2 );
+        add_action( 'woocommerce_checkout_create_order_line_item', array( $this, 'save_cart_item_custom_meta_as_order_item_meta' ), 10, 4 );
         
-        add_action( 'woocommerce_checkout_order_processed', array( $this , 'save_booking_order' ),  10, 1  );
+        add_action( 'woocommerce_checkout_order_processed', array( $this, 'save_booking_order' ),  10, 1  );
 
-        add_action( 'woocommerce_checkout_create_order', array( $this , 'check_date_availability' ), 10, 1 ); 
+        add_action( 'woocommerce_checkout_create_order', array( $this, 'check_date_availability' ), 10, 1 ); 
+
+        add_filter( 'woocommerce_add_cart_item_data', array( $this, 'add_cart_item_data' ), 10, 2 );
+        add_action( 'woocommerce_before_calculate_totals', array( $this, 'before_calculate_totals' ), 10, 1 );
     }
 
     //Step 2. Use that class to extend WooCommerce Data Store class
@@ -67,6 +70,7 @@ class WCManager
         $product_id = $product->get_id();
 
         if ( get_post_type( $product_id ) == 'room' ) {
+            if ( !empty( $price ) ) return $price;
             $price = get_post_meta( $product_id, 'room_price', true );
             $price = isset( $price ) ? ( floatval( $price ) ) : 0;
         }
@@ -142,7 +146,7 @@ class WCManager
 
     // Display custom cart item meta data (in cart and checkout)
     function display_cart_item_custom_meta_data( $item_data, $cart_item ) {
-        $meta_keys = array( 'Check in', 'Check out', 'Number of visitors' );
+        $meta_keys = array( 'Check in', 'Check out', 'Night(s)', 'Number of visitors' );
         foreach ( $meta_keys as $meta_key ){
             if ( isset( $cart_item[$meta_key] ) ) {
                 $item_data[] = array(
@@ -157,7 +161,7 @@ class WCManager
 
     // Save cart item custom meta as order item meta data and display it everywhere on orders and email notifications.
     function save_cart_item_custom_meta_as_order_item_meta( $item, $cart_item_key, $values, $order ) {
-        $meta_keys = array( 'Check in', 'Check out', 'Number of visitors' );
+        $meta_keys = array( 'Check in', 'Check out', 'Night(s)', 'Number of visitors' );
         if ($values['data']->get_type() == 'room') {
             foreach ( $meta_keys as $meta_key ){
                 if ( isset( $values[$meta_key] ) ) {
@@ -261,6 +265,35 @@ class WCManager
         }
 
         return $order;
+    }
+
+    public function add_cart_item_data( $cart_item_data, $product_id ) {
+        $product = wc_get_product( $product_id );
+        $price = $product->get_price();
+
+        if( isset( $cart_item_data['Night(s)'] ) ) {
+            $cart_item_data['new_price'] = $price * $cart_item_data['Night(s)'];
+        }
+
+        return $cart_item_data;
+    }
+
+    public function before_calculate_totals( $cart_obj ) {
+        if ( is_admin() && ! defined( 'DOING_AJAX' ) ) 
+            return;
+
+        if ( did_action( 'woocommerce_before_calculate_totals' ) >= 2 )
+            return;
+
+        // Iterate through each cart item
+        foreach( $cart_obj->get_cart() as $cart_item_key => $cart_item ) {
+            if( isset( $cart_item['new_price'] ) ) {
+                if( $cart_item['data']->get_type() == 'room' ) {
+                    $price = $cart_item['new_price'];
+                    $cart_item['data']->set_price( $price );
+                }
+            }
+        }
     }
 }
 

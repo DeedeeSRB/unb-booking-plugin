@@ -123,7 +123,8 @@ class AjaxManager
         $order_info = array(
             'Check in' => $check_in,
             'Check out' => $check_out,
-            'Number of visitors' => $num_visitors
+            'Night(s)' => $booking_days,
+            'Number of visitors' => $num_visitors,
         );
 
         // We do a similar validation process that woocommerce does when adding a product to the cart
