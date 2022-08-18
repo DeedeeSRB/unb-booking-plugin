@@ -21,33 +21,65 @@
  */
 class CPTMetaCallbacks 
 {
+
+    /**
+	 * Callback function to display a posts' meta fields box dynamiclly
+     * The $post_args variable is provided by wordpress and contains information about the post we are displaying its meta box
+     * The $callback_args variable is provided by us and contains information such as the nonce name and the fields with their properties
+     * 
+	 * @since 1.0.0
+	 * @access public
+	 */
     public static function postBox( $post_args, $callback_args )
 	{
+        // Generate a wordpress nonce field for validation later on
 		wp_nonce_field( UNB_PLUGIN_NAME, $callback_args['args']['nonce'] );
+
+        // Foreach loop to display all the fields
         foreach ( $callback_args['args']['fields'] as $field ) {
+
+            // The field id is also the post meta key and we check if there is an older value for this meta field
             $value = get_post_meta( $post_args->ID, $field['id'], true);
-            $type = isset($field['type']) ? $field['type'] : '';
-            $place_holder = isset($field['place_holder']) ? $field['place_holder'] : '';
+
+            // One of the properties we provide to fields is 'type' which explains what input type it is
+            $type = isset( $field['type'] ) ? $field['type'] : '';
+
+            // If we have set a placeholder to the field we fetch it
+            $place_holder = isset( $field['place_holder'] ) ? $field['place_holder'] : '';
+
+            // Start displaying the html for the fields
             echo '<div>';
-                echo '<label for="' . $field['id'] . '">' . $field['label'] . '</label>';
+            
+            // Echo the label for the field with the 'for' attr set to the field id and the label is taken from the field 'label' property
+            echo '<label for="' . $field['id'] . '">' . $field['label'] . '</label>';
+            echo '<div>';
 
-                if ( $type == 'textarea' ) {
-                    echo '<div><textarea class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $place_holder . '" >' .  $value . '</textarea></div>';
+            // Depending on the type we display the corresponding input field with their properties
+            if ( $type == 'textarea' ) {
+                echo '<textarea class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $place_holder . '" >' .  $value . '</textarea>';
+            }
+            // If the type is 'select', the field should have the property 'options'
+            else if ( $type == 'select' ) {
+                $options = $field['options'];
+                echo '<select class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '">';
+                foreach ( $options as $option ) { 
+                    // If the option is the same as the value we retrieved from the post meta then that means it should be selected by default
+                    $selected = strcmp( $option, $value) == 0 ? 'selected' : '';
+                    echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
                 }
+                echo '</select>';
+            }
+            // If not type is provided then by defautl the type should be text
+            else {
+                echo '<input type="text" class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $place_holder . '" value="' .  $value . '"/>';    
+            }
 
-                else if ( $type == 'select' ) {
-                    $options = $field['options'];
-                    echo '<div><select class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '">';
-                    foreach ( $options as $option ) { 
-                        $selected = strcmp( $option, $value) == 0 ? 'selected' : '';
-                        echo '<option value="' . $option . '" ' . $selected . '>' . $option . '</option>';
-                    }
-                    echo '</select></div>';
-                }
+            // If a description is provided to a field, then we display it
+            if ( isset( $field['description'] ) ) {
+                echo '<p class="description">' . $field['description'] . '</p>';
+            }
 
-                else {
-                    echo '<div><input type="text" class="regular-text" id="' . $field['id'] . '" name="' . $field['id'] . '" placeholder="' . $place_holder . '" value="' .  $value . '"/></div>';    
-                }
+            echo '</div>';
             echo '</div>';
         }
 	}

@@ -127,29 +127,34 @@ class CPTAdmin
                 'id' => 'room_desc',
                 'label' => 'Description',
                 'type' => 'textarea',
+                'description' => 'A small description to the room',
             ),
             array(
                 'id' => 'room_price',
                 'label' => 'Price',
                 'place_holder' => isset( get_option( 'room_options' )['room_price'] ) ? '(Default: ' . get_option( 'room_options' )['room_price'] . ')' : '', 
+                'description' => 'What does this room cost for 1 day?',
             ),
             array(
                 'id' => 'room_max_num_vis',
                 'label' => 'Maximum number of visitors',
                 'columnName' => 'Max. No. of visitors',
                 'place_holder' => isset( get_option( 'room_options' )['room_max_num_vis'] ) ? '(Default: ' . get_option( 'room_options' )['room_max_num_vis'] . ')' : '',
+                'description' => 'This room can hold a maximum number of X visitors',
             ),
             array(
                 'id' => 'room_min_booking_days',
                 'label' => 'Minumum booking days',
                 'columnName' => 'Min. booking days',
                 'place_holder' => isset( get_option( 'room_options' )['room_min_booking_days'] ) ? '(Default: ' . get_option( 'room_options' )['room_min_booking_days'] . ')' : '',
+                'description' => 'What is the minumum booking days for this room?',
             ),
             array(
                 'id' => 'room_amenities',
                 'label' => 'Amenties',
                 'type' => 'textarea',
                 'place_holder' => isset( get_option( 'room_options' )['room_amenities'] ) ? '(Default: ' . get_option( 'room_options' )['room_amenities'] . ')' : '',
+                'description' => 'What special about this room? Please seperate the amenities with a comma \',\'',
             ),
         ); 
 
