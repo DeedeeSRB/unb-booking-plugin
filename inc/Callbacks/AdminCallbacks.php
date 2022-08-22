@@ -16,7 +16,7 @@ class AdminCallbacks
 		return require_once UNB_PLUGIN_PATH . '/templates/admin-settings.php';
 	}
 
-	public function currencySanitize( $input )
+	public static function currencySanitize( $input )
 	{
 		$currency = json_decode( $input['type'] );
 		$input['type'] = $currency[0];

@@ -61,17 +61,17 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public static function register() {
+    public function register() {
         if ( !empty( RegisterCPT::$customPostTypes ) ) {
-            add_action('init', array( 'UnbBooking\CPTs\RegisterCPT', 'registerCPTs' ) );
+            add_action('init', array( $this, 'registerCPTs' ) );
         }
         if ( !empty( RegisterCPT::$metaBoxes ) ) {
-            add_action( 'add_meta_boxes', array( 'UnbBooking\CPTs\RegisterCPT', 'registerCPTMetaBoxes' ) );
+            add_action( 'add_meta_boxes', array( $this, 'registerCPTMetaBoxes' ) );
         }
         if ( !empty( RegisterCPT::$metaFields ) ) {
-            add_action( 'save_post', array( 'UnbBooking\CPTs\RegisterCPT', 'saveCustomPosts' ), 10, 2 );
-            add_action( 'manage_posts_custom_column' , array( 'UnbBooking\CPTs\RegisterCPT', 'customDisplayColumns' ), 10, 2 );
-            add_filter( 'manage_posts_columns', array( 'UnbBooking\CPTs\RegisterCPT', 'customColumnsList' ), 10, 2 );
+            add_action( 'save_post', array( $this, 'saveCustomPosts' ), 10, 2 );
+            add_action( 'manage_posts_custom_column' , array( $this, 'customDisplayColumns' ), 10, 2 );
+            add_filter( 'manage_posts_columns', array( $this, 'customColumnsList' ), 10, 2 );
         }
     }
 
@@ -81,7 +81,7 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public static function registerCPTs() {
+    public function registerCPTs() {
         foreach ( RegisterCPT::$customPostTypes as $cpt ) {
 		
             $supports = $cpt['supports'];
@@ -122,7 +122,6 @@ class RegisterCPT
             $args = array_merge( $args, $cpt['args'] );
             
             register_post_type( strtolower( $singular_name ), $args);
-            //register_taxonomy( 'categories', strtolower( $singular_name ) );
         }
     }
 
@@ -132,7 +131,7 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public static function registerCPTMetaBoxes() {
+    public function registerCPTMetaBoxes() {
         foreach ( RegisterCPT::$metaBoxes as $metaBox) {
             add_meta_box( 
                 $metaBox['id'],
@@ -152,7 +151,7 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public static function saveCustomPosts( $post_id, $post ) {
+    public function saveCustomPosts( $post_id, $post ) {
         
         $post_type = get_post_type( $post_id );
 
@@ -160,7 +159,7 @@ class RegisterCPT
         if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return;
 
         // If the post type has a custom function to display the columns then this function won't proceed.
-        if ( isset( RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) && RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) return;
+        if ( isset( RegisterCPT::$metaColumns[$post_type]['custom_display'] ) && RegisterCPT::$metaColumns[$post_type]['custom_display'] ) return;
 
         // If it tries to auto save, we won't actually save the data.
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
@@ -197,20 +196,25 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public static function customColumnsList( $columns, $post_type ) {
+    public function customColumnsList( $columns, $post_type ) {
         
+        // If the given post type isn't part of our plugin then this function won't affect it.
         if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return $columns;
 
+        // Get all the column data from the post type
         $columnData = RegisterCPT::$metaColumns[$post_type];
         
+        // Each column has its id and name. Use these to add more columns to display in the post's table.
         foreach( $columnData['columnNames'] as $id => $name ) {
             $columns[$id] = __( $name );
         }
 
+        // If there were any columns to unset, unset them here.
         foreach( $columnData['unset'] as $unset ) {
             unset( $columns[$unset] );
         }
         
+        // Return the new array of columns
         return $columns;
     }
 
@@ -220,15 +224,18 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public static function customDisplayColumns( $column, $post_id ) {
+    public function customDisplayColumns( $column, $post_id ) {
 
+        // Get the post type to check if it is part of our plugin.
         $post_type = get_post_type( $post_id );
 
+        // If the given post type isn't part of our plugin then this function won't affect it.
         if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return;
 
         // If the post type has a custom function to display the columns then this function won't proceed.
-        if ( isset( RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) && RegisterCPT::$metaColumns[$post_type]['customDisplay'] ) return;
+        if ( isset( RegisterCPT::$metaColumns[$post_type]['custom_display'] ) && RegisterCPT::$metaColumns[$post_type]['custom_display'] ) return;
         
+        // Get the data for this column and display it if it is not empty.
         $data = get_post_meta( $post_id , $column , true );
         if ( isset( $data ) && $data != '' ) echo $data;
     }
@@ -239,7 +246,7 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public static function setCPTs($cpt) {
+    public function setCPTs($cpt) {
         RegisterCPT::$customPostTypes = array_merge( RegisterCPT::$customPostTypes, $cpt );
     }
 
@@ -249,20 +256,21 @@ class RegisterCPT
 	 * @since 1.0.0
 	 * @access public
 	 */
-    public static function setCPTMetas($metaBoxes) {
+    public function setCPTMetas($metaBoxes) {
 
         // Setting the meta boxes
         RegisterCPT::$metaBoxes = array_merge( RegisterCPT::$metaBoxes, $metaBoxes );
 
+        // For each meta box there are many attriutes we want to save seperated with their custom post type ('screen')
         foreach ( $metaBoxes as $metaBox ) {
 
             /**
              * Setting the meta fields
              * 
-             * 1) If the array is not initialized then we initialize it.
+             * 1) If the array is not initialized then we initialize it by giving an empty array.
+             * Note: If we try to merge it with another array and it wasn't initialized we get an error.
              * 2) We get the fields from the callback_args.
-             * 3) If the fields are not set then we just give an empty array.
-             * 4) We merge the new fields to the old fields. 
+             * 3) We merge the new fields to the old fields. 
              * 
              * */ 
             if ( !isset( RegisterCPT::$metaFields[$metaBox['screen']] ) ) RegisterCPT::$metaFields[$metaBox['screen']] = array();
@@ -281,8 +289,7 @@ class RegisterCPT
              * 
              * 1) If the array is not initialized then we initialize it.
              * 2) We get the unset columns from the callback_args.
-             * 3) If the unset columns are not set then we just give an empty array.
-             * 4) We merge the new unset columns to the old unset columns. 
+             * 3) We merge the new unset columns to the old unset columns. 
              * 
              * */ 
             if ( !isset( RegisterCPT::$metaColumns[$metaBox['screen']]['unset'] ) ) RegisterCPT::$metaColumns[$metaBox['screen']]['unset'] = array();
@@ -294,7 +301,7 @@ class RegisterCPT
 
             // Setting whether this cpt has custom display columns if it is set. So it doesn't run the default methods in this class.
             // (eg. booking has a custom dispaly function in CustomRegisterCPT.php)
-            RegisterCPT::$metaColumns[$metaBox['screen']]['customDisplay'] = isset( $metaBox['callback_args']['customDisplay'] ) ? $metaBox['callback_args']['customDisplay'] : '';
+            RegisterCPT::$metaColumns[$metaBox['screen']]['custom_display'] = isset( $metaBox['callback_args']['custom_display'] ) ? $metaBox['callback_args']['custom_display'] : '';
         }
     }
 }

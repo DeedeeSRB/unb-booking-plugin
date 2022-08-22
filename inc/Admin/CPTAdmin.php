@@ -112,15 +112,22 @@ class CPTAdmin
         require_once UNB_PLUGIN_PATH . 'inc/Callbacks/CPTMetaCallbacks.php';
 
         /**
-         *  The fields array of any meta box will hold all the fields that should be displayed in that meta box.
-         *  Not all fields have to be displayed in the meta box or columns.
-         *  These fields can take the attributes 'id', 'label', 'type', 'place_holder', and 'columnName'.
+         *  This array will hold all the meta fields that should be included in the custom post type meta box.
+         *  Important note: Not all fields have to be displayed in the meta box or columns. 
+         * 
+         *  These fields can take the attributes 'id', 'label', 'type', 'place_holder', 'columnName', and 'description.
+         *  
+         *  The 'label' will be shown in both the table and the field label.
+         *  You can override the table name with 'columnName'.
+         *  There are three types for now (text, textara, and select)
+         * 
          *      Required fields: 'id' and 'label'
          *      Constraints: 'id' should be unique for each field
          *      Default values: -
          *          'type' => 'text'
          *          'columnName' => label
          *          'place_holder' => ''
+         *          'description' => null
          */
         $roomMetaFields = array(
             array(
@@ -209,9 +216,17 @@ class CPTAdmin
         );
 
         /**
-         *  The metaBoxes array will hold all the meta boxes that should be displayed for a specific CPT.
-         *  These metaBoxes can take the attributes 'id', 'title', 'callback', 'screen', 'context', 'priority', and 'callback_args'.
-         *  The 'callback_args' attribute can take 'nonce', 'fields', and 'unsetColumns'.
+         *  This array will hold all the meta boxes that should be displayed for a specific CPT.
+         * 
+         *  These meta boxes can take the attributes 'id', 'title', 'callback', 'screen', 'context', 'priority', and 'callback_args'.
+         *  The 'screen' attribute refers to the custom post type, in this first case it is 'room'.
+         *  The 'context' attribute refers to where the meta box should be displayed in the cpt page (advanved, noraml, or side)
+         * 
+         *  The 'callback_args' attribute can take 'nonce', 'fields', 'unsetColumns', 'option_name', and 'custom_display'.
+         *  The 'unsetColumns' attribute refers to the fields/column that you don't want to be displayed in the cpt table page. 
+         *      Also you can unset builtin columns such as 'Title' and 'Date'
+         *  The 'option_name' is only used when there is a default value for a field and you want to use it if the inputed value when saving the post is empty.
+         * 
          *      Required fields: 'id', 'title', 'callback', 'screen', and 'nonce'
          *      Constraints: 
          *          'id' should be unique for each metaBox.
@@ -224,6 +239,7 @@ class CPTAdmin
          *          'priority' => 'default'
          *          'fields' => null
          *          'unsetColumns' => null
+         *          'option_name' => null
          */
         $metaBoxes = array(
             array(
@@ -251,7 +267,7 @@ class CPTAdmin
                     'nonce' =>  'booking_box_nonce',
                     'fields' => $bookingMetaFields,
                     'unsetColumns' => array( 'date', 'booking_email', 'booking_phone', 'booking_address', 'booking_num_people', 'booking_billing_details', 'wc_order_id' ),
-                    'customDisplay' => true,
+                    'custom_display' => true,
                 )
             ),
             array(
@@ -264,7 +280,7 @@ class CPTAdmin
                 'callback_args' => array(
                     'nonce' =>  'booking_payment_box_nonce',
                     'fields' => $bookingPaymentMetaFields,
-                    'customDisplay' => true,
+                    'custom_display' => true,
                 )
             ),
         );
