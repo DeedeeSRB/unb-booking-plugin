@@ -41,12 +41,15 @@ class CPTAdmin
 	public function register() 
 	{
         require_once UNB_PLUGIN_PATH . 'inc/CPT/RegisterCPT.php';
-		
+	
+        // Create new instance of our RegisterCPT class
 		$this->registerCPT = new RegisterCPT();
 
+        // Call the set CPTS and their matas functions
         $this->setCPTs();
         $this->setCPTMetas();
 
+        // All the register function to register all the custom post types and their meta boxes
 		$this->registerCPT->register();
     }
 
@@ -226,6 +229,7 @@ class CPTAdmin
          *  The 'unsetColumns' attribute refers to the fields/column that you don't want to be displayed in the cpt table page. 
          *      Also you can unset builtin columns such as 'Title' and 'Date'
          *  The 'option_name' is only used when there is a default value for a field and you want to use it if the inputed value when saving the post is empty.
+         *  The 'custom_display' means that this meta box has its own custom functions in the CustomRegisterCPT.php file.
          * 
          *      Required fields: 'id', 'title', 'callback', 'screen', and 'nonce'
          *      Constraints: 
