@@ -41,7 +41,6 @@
                                 <div class="row my-4">
                                     <div class="col text-start">
                                         <a href="<?= $post->guid ?>"><?= esc_html__( $post->post_title ) ?></a>
-                                        <div><?= esc_html__( $post->post_content ) ?></div>   
                                     </div>
                                     <div class="col text-center">
                                         <a href="<?= $post->guid ?>"><img src="<?= $img ?>" alt=""></a>
