@@ -1,65 +1,55 @@
 <?php
 /**
- * RegisterCPT class.
+ * Responsible to register the plugin's custom post types dynamicly for the admin panel.
  *
  * @category   Class
- * @package    UNBBookingPlugin
- * @subpackage WordPress
- * @author     Unbelievable Digital
- * @copyright  2022 Unbelievable Digital
- * @license    https://opensource.org/licenses/GPL-3.0 GPL-3.0-only
- * @link       https://unbelievable.digital/
+ * @package    UNBBookingPlugin\Classes
  * @since      1.0.0
- * php version 7.3.9
  */
 
 namespace UnbBooking\CPTs;
 
  /**
- * UNB Booking Plugin Registering Custom Post Type Class
- *
- * Responsible to register the plugin's custom post types dynamicly for the admin panel.
- * 
+ * Register Custom Post Types class
  */
 class RegisterCPT 
 {
     /**
-	 * Admin custom post types
+	 * Array to keep track of all custom post types
 	 *
 	 * @since 1.0.0
-	 * @var array Array to keep track of all custom post types
+	 * @var array 
 	 */
     public static $customPostTypes = array();
 
     /**
-	 * Meta boxes for the custom post types
+	 * Array to keep track of all custom posts' meta boxes
 	 *
 	 * @since 1.0.0
-	 * @var array Array to keep track of all custom posts meta data
+	 * @var array 
 	 */
     public static $metaBoxes = array();
 
     /**
-	 * Meta fields for the custom post types meta boxes
+	 * Array to keep track of all custom posts' meta fields
 	 *
 	 * @since 1.0.0
-	 * @var array Array to keep track of all custom posts meta data
+	 * @var array 
 	 */
     public static $metaFields = array();
 
     /**
-	 * Table columns for the custom post types meta data
+	 * Array to keep track of all custom posts' meta data columns
 	 *
 	 * @since 1.0.0
-	 * @var array Array to keep track of all custom posts meta data columns
+	 * @var array 
 	 */
     public static $metaColumns = array();
     
     /**
-	 * Call a function to register custom post types and their meta fields and boxes if they are not empty.
+	 * Call a function to register custom post types, their meta boxes, and meta fields if they are not empty.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
     public function register() {
         if ( !empty( RegisterCPT::$customPostTypes ) ) {
@@ -70,8 +60,8 @@ class RegisterCPT
         }
         if ( !empty( RegisterCPT::$metaFields ) ) {
             add_action( 'save_post', array( $this, 'saveCustomPosts' ), 10, 2 );
+            add_filter( 'manage_posts_columns', array( $this, 'columnsTitleList' ), 10, 2 );
             add_action( 'manage_posts_custom_column' , array( $this, 'customDisplayColumns' ), 10, 2 );
-            add_filter( 'manage_posts_columns', array( $this, 'customColumnsList' ), 10, 2 );
         }
     }
 
@@ -79,15 +69,16 @@ class RegisterCPT
 	 * Register all custom post types for the admin panel.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
     public function registerCPTs() {
+        // Loop through all the set custom post types
         foreach ( RegisterCPT::$customPostTypes as $cpt ) {
 		
-            $supports = $cpt['supports'];
-
+            // Get the plural and singular name
             $name = $cpt['name'];
             $singular_name = $cpt['singular_name'];
+
+            // Generate the labels for the cpt
             $labels = array(
                 'name'                  => _x( $name, 'Post type general name' ),
                 'singular_name'         => _x( $singular_name, 'Post type singular name' ),
@@ -115,12 +106,18 @@ class RegisterCPT
                 'items_list'            => _x( $name . ' list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4' ),
             );
 
+            // Get the features that this cpt will support
+            // Core features include 'title', 'editor', 'comments', 'revisions', 'trackbacks', 'author', 'excerpt', 'page-attributes', 'thumbnail', 'custom-fields', and 'post-formats'
+            $supports = $cpt['supports'];
+
+            // Combine and merge all the cpt's args parameters
             $args = array(
                 'supports' => $supports,
                 'labels' => $labels 
             );
             $args = array_merge( $args, $cpt['args'] );
             
+            // Register the custom post type
             register_post_type( strtolower( $singular_name ), $args);
         }
     }
@@ -129,18 +126,19 @@ class RegisterCPT
 	 * Register all custom post types meta boxex.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
     public function registerCPTMetaBoxes() {
+        // Loop through all the set custom post types' meta boxes
         foreach ( RegisterCPT::$metaBoxes as $metaBox) {
+            // Add all the meta boxes
             add_meta_box( 
-                $metaBox['id'],
-                $metaBox['title'],
-                $metaBox['callback'],
-                $metaBox['screen'],
-                ( isset( $metaBox['context'] ) ? $metaBox['context'] : 'advanced' ),
-                ( isset( $metaBox['priority'] ) ? $metaBox['priority'] : 'default' ),
-                ( isset( $metaBox['callback_args'] ) ? $metaBox['callback_args'] : null )
+                $metaBox['id'], # The unique ID of the meta box
+                $metaBox['title'], # The title of the meta box
+                $metaBox['callback'], # The html callback method
+                $metaBox['screen'], # Refers to the custom post type's name
+                ( isset( $metaBox['context'] ) ? $metaBox['context'] : 'advanced' ), # Default: advanced
+                ( isset( $metaBox['priority'] ) ? $metaBox['priority'] : 'default' ), # Default: default
+                ( isset( $metaBox['callback_args'] ) ? $metaBox['callback_args'] : null ) # Default: NULL
             );
         }
     }
@@ -149,10 +147,12 @@ class RegisterCPT
 	 * Save all custom post types meta fields.
 	 *
 	 * @since 1.0.0
-	 * @access public
+     * @param int     $post_id  The post's id
+     * @param WP_Post $post     The post variable that's being saved
 	 */
     public function saveCustomPosts( $post_id, $post ) {
         
+        // Get the post type to check if it is part of our plugin.
         $post_type = get_post_type( $post_id );
 
         // If the given post type isn't part of our plugin then this function won't affect it.
@@ -191,12 +191,14 @@ class RegisterCPT
     }
 
     /**
-	 * Filter the columns of all custom post types metas.
+	 * Filter the column titles of all custom post types metas.
 	 *
-	 * @since 1.0.0
-	 * @access public
+	 * @since  1.0.0
+     * @param  array  $columns   The column titles in the cpt's table
+     * @param  string $post_type The cpt's type
+     * @return array             The new array of titles that will be visible in the cpt's table
 	 */
-    public function customColumnsList( $columns, $post_type ) {
+    public function columnsTitleList( $columns, $post_type ) {
         
         // If the given post type isn't part of our plugin then this function won't affect it.
         if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return $columns;
@@ -222,9 +224,10 @@ class RegisterCPT
 	 * Display the columns data of all custom post types metas.
 	 *
 	 * @since 1.0.0
-	 * @access public
+     * @param string $column  The column name
+     * @param int    $post_id The cpt's id
 	 */
-    public function customDisplayColumns( $column, $post_id ) {
+    public function columnsDisplayData( $column, $post_id ) {
 
         // Get the post type to check if it is part of our plugin.
         $post_type = get_post_type( $post_id );
@@ -232,7 +235,7 @@ class RegisterCPT
         // If the given post type isn't part of our plugin then this function won't affect it.
         if ( !array_key_exists( $post_type, RegisterCPT::$metaColumns ) ) return;
 
-        // If the post type has a custom function to display the columns then this function won't proceed.
+        // If this post type has a custom function to display the column data then this function won't proceed.
         if ( isset( RegisterCPT::$metaColumns[$post_type]['custom_display'] ) && RegisterCPT::$metaColumns[$post_type]['custom_display'] ) return;
         
         // Get the data for this column and display it if it is not empty.
@@ -244,9 +247,9 @@ class RegisterCPT
 	 * Set custom post types array
 	 *
 	 * @since 1.0.0
-	 * @access public
+     * @param array An array with all the custom post types that we want to merge for registeration
 	 */
-    public function setCPTs($cpt) {
+    public function setCPTs( $cpt ) {
         RegisterCPT::$customPostTypes = array_merge( RegisterCPT::$customPostTypes, $cpt );
     }
 
@@ -254,11 +257,11 @@ class RegisterCPT
 	 * Set custom post types meta fields and boxes array
 	 *
 	 * @since 1.0.0
-	 * @access public
+     * @param array An array with all the cpts' meta boxes that we want to merge for registeration
 	 */
     public function setCPTMetas($metaBoxes) {
 
-        // Setting the meta boxes
+        // Merging the meta boxes
         RegisterCPT::$metaBoxes = array_merge( RegisterCPT::$metaBoxes, $metaBoxes );
 
         // For each meta box there are many attriutes we want to save seperated with their custom post type ('screen')
