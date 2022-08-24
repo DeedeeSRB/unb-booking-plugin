@@ -1,8 +1,14 @@
 <?php 
 /**
- * @package  UNBBookingPlugin
+ * Admin Callbakcs
+ * 
+ * Hold all the callback functions for the admin settings page
+ * 
+ * @package    UNBBookingPlugin\Classes
+ * @since      1.0.0
  */
-//namespace Inc\Api;
+
+namespace UnbBooking\Callbacks;
 
 class AdminCallbacks
 {

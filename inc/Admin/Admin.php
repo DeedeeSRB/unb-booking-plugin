@@ -16,6 +16,7 @@
 namespace UnbBooking\Admin;
 
 use UnbBooking\Api\SettingsApi;
+use UnbBooking\Callbacks\AdminCallbacks;
 
 /**
  * UNB Booking Plugin Admin Class
@@ -42,7 +43,8 @@ class Admin
 	 */
 	public function register() 
 	{
-		require UNB_PLUGIN_PATH . 'inc/Api/SettingsApi.php';
+		require_once UNB_PLUGIN_PATH . 'inc/Api/SettingsApi.php';
+		require_once UNB_PLUGIN_PATH . 'inc/Callbacks/AdminCallbacks.php';
 		
 		$this->settings = new SettingsApi();
 
@@ -65,14 +67,13 @@ class Admin
 	 */
 	public function setPages() 
 	{
-		require UNB_PLUGIN_PATH . 'inc/Callbacks/AdminCallbacks.php';
 		$pages = array(
 			array(
 				'page_title' => 'UNB Booking Plugin', 
 				'menu_title' => 'UNB Booking', 
 				'capability' => 'manage_options', 
 				'menu_slug' => 'unb_booking_plugin', 
-				'callback' => array( 'AdminCallbacks', 'adminDashboard' ), 
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'adminDashboard' ), 
 				'icon_url' => 'dashicons-open-folder', 
 				'position' => 58
 			)
@@ -96,7 +97,7 @@ class Admin
 				'menu_title' => 'Settings', 
 				'capability' => 'manage_options', 
 				'menu_slug' => 'unb_booking_plugin_settings', 
-				'callback' => array( 'AdminCallbacks', 'adminSettings' )
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'adminSettings' )
 			)
 		);
 
@@ -115,7 +116,7 @@ class Admin
 			array(
 				'option_group' => 'unb_booking_plugin_currency_options',
 				'option_name' => 'currency_options',
-				'callback' => array( 'AdminCallbacks', 'currencySanitize' )
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'currencySanitize' )
 			),
 			array(
 				'option_group' => 'unb_booking_plugin_room_options',
@@ -137,12 +138,12 @@ class Admin
 		$args = array(
 			array(
 				'id' => 'unb_booking_plugin_currency_section',
-				'callback' => array( 'AdminCallbacks', 'currencySection' ),
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'currencySection' ),
 				'page' => 'unb_booking_plugin'
 			),
 			array(
 				'id' => 'unb_booking_plugin_room_section',
-				'callback' => array( 'AdminCallbacks', 'roomSection' ),
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'roomSection' ),
 				'page' => 'unb_booking_plugin_settings'
 			),
 		);
@@ -162,7 +163,7 @@ class Admin
 			array(
 				'id' => 'currency_type',
 				'title' => 'Currency',
-				'callback' => array( 'AdminCallbacks', 'currencyType' ),
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'currencyType' ),
 				'page' => 'unb_booking_plugin',
 				'section' => 'unb_booking_plugin_currency_section',
 				'args' => array(
@@ -180,7 +181,7 @@ class Admin
 			array(
 				'id' => 'currency_pos',
 				'title' => 'Currency Position',
-				'callback' => array( 'AdminCallbacks', 'currencyPos' ),
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'currencyPos' ),
 				'page' => 'unb_booking_plugin',
 				'section' => 'unb_booking_plugin_currency_section',
 				'args' => array(
@@ -195,7 +196,7 @@ class Admin
 			array(
 				'id' => 'room_price',
 				'title' => 'Price',
-				'callback' => array( 'AdminCallbacks', 'unbText' ),
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'unbText' ),
 				'page' => 'unb_booking_plugin_settings',
 				'section' => 'unb_booking_plugin_room_section',
 				'args' => array(
@@ -208,7 +209,7 @@ class Admin
 			array(
 				'id' => 'room_max_num_vis',
 				'title' => 'Maximum number of visitors',
-				'callback' => array( 'AdminCallbacks', 'unbText' ),
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'unbText' ),
 				'page' => 'unb_booking_plugin_settings',
 				'section' => 'unb_booking_plugin_room_section',
 				'args' => array(
@@ -221,7 +222,7 @@ class Admin
 			array(
 				'id' => 'room_min_booking_days',
 				'title' => 'Minimum booking days',
-				'callback' => array( 'AdminCallbacks', 'unbText' ),
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'unbText' ),
 				'page' => 'unb_booking_plugin_settings',
 				'section' => 'unb_booking_plugin_room_section',
 				'args' => array(
@@ -234,7 +235,7 @@ class Admin
 			array(
 				'id' => 'room_amenities',
 				'title' => 'Amemities',
-				'callback' => array( 'AdminCallbacks', 'unbText' ),
+				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'unbText' ),
 				'page' => 'unb_booking_plugin_settings',
 				'section' => 'unb_booking_plugin_room_section',
 				'args' => array(
