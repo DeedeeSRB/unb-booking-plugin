@@ -63,7 +63,7 @@ class RegisterCPT
         if ( !empty( RegisterCPT::$metaFields ) ) {
             add_action( 'save_post', array( $this, 'saveCustomPosts' ), 10, 2 );
             add_filter( 'manage_posts_columns', array( $this, 'columnsTitleList' ), 10, 2 );
-            add_action( 'manage_posts_custom_column' , array( $this, 'customDisplayColumns' ), 10, 2 );
+            add_action( 'manage_posts_custom_column' , array( $this, 'columnsDisplayData' ), 10, 2 );
         }
     }
 
