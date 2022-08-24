@@ -16,6 +16,7 @@
 namespace UnbBooking\Admin;
 
 use UnbBooking\CPTs\RegisterCPT;
+use UnbBooking\Callbacks\CPTMetaCallbacks;
 
  /**
  * UNB Booking Plugin Custom Post Type Admin Class
@@ -41,7 +42,8 @@ class CPTAdmin
 	public function register() 
 	{
         require_once UNB_PLUGIN_PATH . 'inc/CPT/RegisterCPT.php';
-	
+        require_once UNB_PLUGIN_PATH . 'inc/Callbacks/CPTMetaCallbacks.php';
+        
         // Create new instance of our RegisterCPT class
 		$this->registerCPT = new RegisterCPT();
 
@@ -112,8 +114,6 @@ class CPTAdmin
 	 * @access public
 	 */
     public function setCPTMetas() {
-        require_once UNB_PLUGIN_PATH . 'inc/Callbacks/CPTMetaCallbacks.php';
-
         /**
          *  This array will hold all the meta fields that should be included in the custom post type meta box.
          *  Important note: Not all fields have to be displayed in the meta box or columns. 
@@ -249,7 +249,7 @@ class CPTAdmin
             array(
                 'id' => 'room_content_box',
                 'title' => __( 'Room details' ),
-                'callback' => array( 'CPTMetaCallbacks', 'postBox' ),
+                'callback' => array( 'UnbBooking\Callbacks\CPTMetaCallbacks', 'postBox' ),
                 'screen' => 'room',
                 'context' => 'normal',
                 'priority' => 'high',
@@ -263,7 +263,7 @@ class CPTAdmin
             array(
                 'id' => 'booking_room_content_box',
                 'title' => __( 'Booking status' ),
-                'callback' => array( 'CPTMetaCallbacks', 'bookingBox' ),
+                'callback' => array( 'UnbBooking\Callbacks\CPTMetaCallbacks', 'bookingBox' ),
                 'screen' => 'booking',
                 'context' => 'normal',
                 'priority' => 'high',
@@ -277,7 +277,7 @@ class CPTAdmin
             array(
                 'id' => 'booking_room_payment_content_box',
                 'title' => __( 'Payment details' ),
-                'callback' => array( 'CPTMetaCallbacks', 'bookingPaymentBox' ),
+                'callback' => array( 'UnbBooking\Callbacks\CPTMetaCallbacks', 'bookingPaymentBox' ),
                 'screen' => 'booking',
                 'context' => 'side',
                 'priority' => 'high',

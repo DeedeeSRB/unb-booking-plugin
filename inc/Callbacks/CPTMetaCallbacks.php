@@ -1,34 +1,27 @@
 <?php
 /**
- * CPTMetaCallbacks class.
+ * CPT MetaCallbacks
+ * 
+ * Keep track and display the plugin's custom post types' fields and boxes.
  *
- * @category   Class
- * @package    UNBBookingPlugin
- * @subpackage WordPress
- * @author     Unbelievable Digital
- * @copyright  2022 Unbelievable Digital
- * @license    https://opensource.org/licenses/GPL-3.0 GPL-3.0-only
- * @link       https://unbelievable.digital/
+ * @package    UNBBookingPlugin\Classes
  * @since      1.0.0
- * php version 7.3.9
  */
 
+namespace UnbBooking\Callbacks;
+
  /**
- * UNB Booking Plugin Custom Post Type's Meta Fields and Boxes Callbacks Class
- *
- * Responsible to keep track and display the plugin's custom post types fields and boxes.
- * 
+ * Custom Post Types' Fields and Metaboxes callbacks
  */
 class CPTMetaCallbacks 
 {
 
     /**
 	 * Callback function to display a posts' meta fields box dynamiclly
-     * The $post_args variable is provided by wordpress and contains information about the post we are displaying its meta box
-     * The $callback_args variable is provided by us and contains information such as the nonce name and the fields with their properties
      * 
 	 * @since 1.0.0
-	 * @access public
+	 * @param Array $post_args variable is provided by wordpress and contains information about the post we are displaying its meta box
+	 * @param Array $callback_args variable is provided by us and contains information such as the nonce name and the fields with their properties
 	 */
     public static function postBox( $post_args, $callback_args )
 	{
@@ -84,33 +77,50 @@ class CPTMetaCallbacks
         }
 	}
 
+    /**
+	 * Callback function to display a booking meta fields
+     * 
+	 * @since 1.0.0
+	 * @param Array $post_args variable is provided by wordpress and contains information about the post we are displaying its meta box
+	 * @param Array $callback_args variable is provided by us and contains information such as the nonce name
+	 */
     public static function bookingBox( $post_args, $callback_args )
 	{
+         // Generate a wordpress nonce field for validation later on
 		wp_nonce_field( UNB_PLUGIN_NAME, $callback_args['args']['nonce'] );
         
-        $rooms = get_post_meta( $post_args->ID, 'booking_rooms', true) !== null ? get_post_meta( $post_args->ID, 'booking_rooms', true) : '';
+        // For this specfic booking, we need to display all the follow data if they are not null
+        $rooms          = get_post_meta( $post_args->ID, 'booking_rooms', true) !== null           ? get_post_meta( $post_args->ID, 'booking_rooms', true) : '';
         $billingDetails = get_post_meta( $post_args->ID, 'booking_billing_details', true) !== null ? get_post_meta( $post_args->ID, 'booking_billing_details', true) : '';
-        $totalPrice = get_post_meta( $post_args->ID, 'booking_price', true) !== null ? get_post_meta( $post_args->ID, 'booking_price', true) : '';
-        $paymentMethod = get_post_meta( $post_args->ID, 'booking_payment_method', true) !== null ? get_post_meta( $post_args->ID, 'booking_payment_method', true) : '';
-        $bookingDate = get_post_meta( $post_args->ID, 'booking_date', true) !== null ? get_post_meta( $post_args->ID, 'booking_date', true) : '';
-        $wcOrderId = get_post_meta( $post_args->ID, 'wc_order_id', true) !== null ? get_post_meta( $post_args->ID, 'wc_order_id', true) : '';
+        $totalPrice     = get_post_meta( $post_args->ID, 'booking_price', true) !== null           ? get_post_meta( $post_args->ID, 'booking_price', true) : '';
+        $paymentMethod  = get_post_meta( $post_args->ID, 'booking_payment_method', true) !== null  ? get_post_meta( $post_args->ID, 'booking_payment_method', true) : '';
+        $bookingDate    = get_post_meta( $post_args->ID, 'booking_date', true) !== null            ? get_post_meta( $post_args->ID, 'booking_date', true) : '';
+        $wcOrderId      = get_post_meta( $post_args->ID, 'wc_order_id', true) !== null             ? get_post_meta( $post_args->ID, 'wc_order_id', true) : '';
 
+        // Get the currency options to display the correct curency type and symbol postion
         $currencyOptions = get_option( 'currency_options' );
         $pos = isset( $currencyOptions['pos'] ) ? $currencyOptions['pos'] : 'Right'; 
         $symbol = isset( $currencyOptions['symbol'] ) ? $currencyOptions['symbol'] : '$'; 
+        // Display the total price of this booking depending on the symbol and postion
         $totalPrice = strcmp( $pos, 'Left' ) == 0 ? $symbol . ' ' . $totalPrice :  $totalPrice . ' ' . $symbol;
 
         ?>
         <div class="row">
         <?php 
-            if ( $billingDetails != '' ) {
+            // Check if this booking has any rooms booked 
+            if ( $rooms != '' ) {
                 ?>
                 <div class="col-8"> 
                     <?php
+                    // Go through all the rooms that were booked in this booking 
                     foreach ( $rooms as $room ) {
+                        // Get the link for the room 
                         $link = get_permalink( $room['id'] );
-                        $price = strcmp( $pos, 'Left' ) == 0 ? $symbol . ' ' . $room['total'] :  $room['total'] . ' ' . $symbol;
+                        // Get the room's image
                         $img = get_the_post_thumbnail_url( $room['id'], 'post-thumbnail' );
+                        // Display the total price of this room depending on the symbol and postion
+                        $price = strcmp( $pos, 'Left' ) == 0 ? $symbol . ' ' . $room['total'] :  $room['total'] . ' ' . $symbol;
+                        // Get the rooms' check in/out dates
                         $check_in_date = new \DateTime( $room['check_in'] );
                         $check_out_date = new \DateTime( $room['check_out'] );
                         ?>
@@ -128,18 +138,20 @@ class CPTMetaCallbacks
                                         <div>Total cost: </div>
                                     </div>
                                     <div class="col">
-                                        <div><a href="<?= $link ?>"><?= $room['name'] ?></a></div>
-                                        <div><?= date_format( $check_in_date, "d M Y" ) ?></div>
+                                        <div><a href="<?= $link ?>"><?= $room['name']                // Refrence the room with its link ?></a></div>
+                                        <div><?= date_format( $check_in_date, "d M Y" )              // Format the check in/out dates ?></div>
                                         <div><?= date_format( $check_out_date, "d M Y" ) ?></div>
-                                        <div><?= $check_in_date->diff($check_out_date)->format('%a') ?> Night(s)</div>
-                                        <div><?= $room['num_visitors'] ?> Visitor(s)</div>
-                                        <div><b class="mb-2 fw-bold"> x</b><?= $room['quantity'] ?></div>
-                                        <div><b class="mb-2 fw-bold"><?= $price ?></b></div>
+                                        <div><?= $check_in_date->diff($check_out_date)->format('%a') // Display the room's number of nights booked?> Night(s)</div>
+                                        <div><?= $room['num_visitors']                               // Display the room's number of visitors ?>     Visitor(s)</div>
+                                        <div><b class="mb-2 fw-bold"> x</b><?= $room['quantity']     // Display the room's booked quantity ?></div>
+                                        <div><b class="mb-2 fw-bold"><?= $price                      // Display the room's formated price ?></b></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-auto">
-                                <a href="<?= $link ?>"><img height=125px" src="<?= $img ?>" alt=""></a>
+                                <a href="<?= $link // Refrence the room with its link in an image?>">
+                                    <img height=125px" src="<?= $img ?>" alt="">
+                                </a>
                             </div>
                         </div>
                         <?php
@@ -154,7 +166,9 @@ class CPTMetaCallbacks
                 <?php 
             } ?>
             <?php 
+            // Check if this booking has any billing details
             if ( $billingDetails != '' ) {
+                // Display all the billing details
                 ?>
                 <div class="col-4 ps-5"> 
                     <div class="fs-5 mb-3">Order details</div>
@@ -188,7 +202,14 @@ class CPTMetaCallbacks
         <?php
     }
 
-    public static function bookingPaymentBox( $post_args, $callback_args ) {
+    /**
+	 * Callback function to display a booking payment paid meta field
+     * 
+	 * @since 1.0.0
+	 * @param Array $post_args variable is provided by wordpress and contains information about the post we are displaying its meta box
+	 */
+    public static function bookingPaymentBox( $post_args ) {
+        // Get the previously set value for the payment paid variable
         $paymentPaid = get_post_meta( $post_args->ID, 'booking_payment_paid', true) !== null ? get_post_meta( $post_args->ID, 'booking_payment_paid', true) : false;
         ?>
         <div class="row mt-2 pt-1">
@@ -209,7 +230,7 @@ class CPTMetaCallbacks
                 </div>
                 <div class="col text-end">
                     <input type='hidden' value='false' name='booking_payment_paid_form'>
-                    <input class="m-0" type="checkbox" name="booking_payment_paid_form" id="booking_payment_paid_form" value='true'/>
+                    <input type="checkbox" name="booking_payment_paid_form" id="booking_payment_paid_form" value='true'/>
                     <label for="booking_payment_paid_form">Set Paid</label>
                 </div>
             <?php } ?>
