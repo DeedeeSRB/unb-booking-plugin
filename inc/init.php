@@ -1,6 +1,5 @@
 <?php
 /**
- * 
  * Initiator
  * 
  * Responsible to initiate all the UNB classes by calling their register methods.

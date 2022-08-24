@@ -1,6 +1,5 @@
 <?php
 /**
- * 
  * Register Custom Post Types
  * 
  * Responsible to dynamicly register the plugin's custom post types and their meta data.
