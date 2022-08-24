@@ -1,11 +1,14 @@
 <?php
 /**
+ * 
+ * Initiator
+ * 
  * Responsible to initiate all the UNB classes by calling their register methods.
  *
- * @category   Class
  * @package    UNBBookingPlugin\Classes
  * @since      1.0.0
  */
+
 namespace UnbBooking;
 
 use UnbBooking\Base\Enqueue;

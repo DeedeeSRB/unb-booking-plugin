@@ -1,8 +1,10 @@
 <?php
 /**
- * Responsible to register the plugin's custom post types dynamicly for the admin panel.
+ * 
+ * Register Custom Post Types
+ * 
+ * Responsible to dynamicly register the plugin's custom post types and their meta data.
  *
- * @category   Class
  * @package    UNBBookingPlugin\Classes
  * @since      1.0.0
  */
