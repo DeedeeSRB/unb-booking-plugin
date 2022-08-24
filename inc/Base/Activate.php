@@ -1,19 +1,29 @@
 <?php
 /**
- * Activate class.
+ * Activator
+ * 
+ * Runs functions as soon as the plugin has been activated in the plugins admin page.
  *
- * @category   Class
  * @package    UNBBookingPlugin\Classes
  * @since      1.0.0
  */
 
 namespace UnbBooking\Base;
 
+/**
+ * Activate class
+ */
 class Activate
 {
+	/**
+	 * The function that gets called as soon as you activate the plugin 
+	 * 
+	 * @since 1.0.0
+	 */
 	public static function activate() {
 		flush_rewrite_rules();
 
+		// Set up the default room values if they were left empty in the room form
 		if ( !get_option( 'room_options' ) ) {
 			$room_default = array(
                 'room_price' => '150',
@@ -24,6 +34,7 @@ class Activate
 		    update_option( 'room_options', $room_default );
 		}
 
+		// Set up the currency optinos for the plugin
 		if ( !get_option( 'currency_options' ) ) {
 			$currency_default = array(
                 'type' => 'USD',
@@ -33,7 +44,5 @@ class Activate
             );
 		    update_option( 'currency_options', $currency_default );
 		}
-
-		
 	}
 }
