@@ -184,7 +184,7 @@ class RegisterCPT
             $fieldToUpdate = $_POST[$metaField['id']];
             if ( ( !isset( $fieldToUpdate ) || $fieldToUpdate == '' ) && RegisterCPT::$metaColumns[$post_type]['option_name'] != '' ) {
                 $option_name = RegisterCPT::$metaColumns[$post_type]['option_name'];
-                $fieldToUpdate = get_option( $option_name )[$metaField['id']] ;
+                $fieldToUpdate = isset( get_option( $option_name )[$metaField['id']] ) ? get_option( $option_name )[$metaField['id']] : '' ;
             }
             // Save or update the meta.
             update_post_meta( $post_id, $metaField['id'], $fieldToUpdate );
