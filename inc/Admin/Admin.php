@@ -170,11 +170,11 @@ class Admin
 					'label_for' => 'currency_type',
 					'option_name' => 'currency_options',
 					'values' => array(
-						'TRY' => array( 'Turkish Lira', '₺' ),
-						'USD' => array( 'Dollar', '$' ),
-						'EUR' => array( 'Euro', '€' ),
-						'RUB' => array( 'Russia Ruble', '₽' ),
-						'AED' => array( 'UAE Dirham', 'د.إ' ),
+						'TRY' => array( 'title' => 'Turkish Lira',  'sym' => '₺' ),
+						'USD' => array( 'title' => 'Dollar', 		'sym' => '$' ),
+						'EUR' => array( 'title' => 'Euro', 			'sym' => '€' ),
+						'RUB' => array( 'title' => 'Russia Ruble', 	'sym' => '₽' ),
+						'AED' => array( 'title' => 'UAE Dirham', 	'sym' => 'د.إ' ),
 					),
 				)
 			),
