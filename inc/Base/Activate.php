@@ -24,14 +24,14 @@ class Activate
 		flush_rewrite_rules();
 
 		// Set up the default room values if they were left empty in the room form
-		if ( !get_option( 'room_options' ) ) {
+		if ( !get_option( 'default_room_vals' ) ) {
 			$room_default = array(
                 'room_price' => '150',
                 'room_max_num_vis' => '3',
                 'room_min_booking_days' => '7',
                 'room_amenities' => 'Tv, Internet, Swimming Pool',
             );
-		    update_option( 'room_options', $room_default );
+		    update_option( 'default_room_vals', $room_default );
 		}
 
 		// Set up the currency optinos for the plugin

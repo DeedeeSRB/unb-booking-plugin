@@ -119,8 +119,8 @@ class Admin
 				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'currencySanitize' )
 			),
 			array(
-				'option_group' => 'unb_booking_plugin_room_options',
-				'option_name' => 'room_options',
+				'option_group' => 'unb_booking_plugin_default_room_vals',
+				'option_name' => 'default_room_vals',
 			),
 		);
 
@@ -203,7 +203,7 @@ class Admin
 					'label_for' => 'room_price',
 					'class' => 'regular-text',
 					'place_holder' => 'eg. 150',
-					'option_name' => 'room_options'
+					'option_name' => 'default_room_vals'
 				)
 			),
 			array(
@@ -216,7 +216,7 @@ class Admin
 					'label_for' => 'room_max_num_vis',
 					'class' => 'regular-text',
 					'place_holder' => 'eg. 3',
-					'option_name' => 'room_options'
+					'option_name' => 'default_room_vals'
 				)
 			),
 			array(
@@ -229,7 +229,7 @@ class Admin
 					'label_for' => 'room_min_booking_days',
 					'class' => 'regular-text',
 					'place_holder' => 'eg. 7',
-					'option_name' => 'room_options'
+					'option_name' => 'default_room_vals'
 				)
 			),
 			array(
@@ -242,7 +242,7 @@ class Admin
 					'label_for' => 'room_amenities',
 					'class' => 'regular-text',
 					'place_holder' => 'eg. Tv, Internet, Swimming Pool',
-					'option_name' => 'room_options'
+					'option_name' => 'default_room_vals'
 				)
 			),
 			
