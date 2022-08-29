@@ -73,7 +73,7 @@ class Admin
 				'menu_title' => 'UNB Booking', 
 				'capability' => 'manage_options', 
 				'menu_slug' => 'unb_booking_plugin', 
-				'callback' => array( 'UnbBooking\Callbacks\AdminCallbacks', 'adminDashboard' ), 
+				'callback' => array( 'CAdminCallbacks', 'adminDashboard' ), 
 				'icon_url' => 'dashicons-open-folder', 
 				'position' => 58
 			)
