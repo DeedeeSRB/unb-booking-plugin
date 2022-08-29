@@ -1,16 +1,11 @@
 <?php
 /**
- * CPTAdmin class.
+ * CPTAdmin class
+ * 
+ * Responsible for creating and setting custom post types data in the RegisterCPT.php file and calling to register them
  *
- * @category   Class
- * @package    UNBBookingPlugin
- * @subpackage WordPress
- * @author     Unbelievable Digital
- * @copyright  2022 Unbelievable Digital
- * @license    https://opensource.org/licenses/GPL-3.0 GPL-3.0-only
- * @link       https://unbelievable.digital/
+ * @package    UNBBookingPlugin\Classes
  * @since      1.0.0
- * php version 7.3.9
  */
 
 namespace UnbBooking\Admin;
@@ -19,9 +14,7 @@ use UnbBooking\CPTs\RegisterCPT;
 use UnbBooking\Callbacks\CPTMetaCallbacks;
 
  /**
- * UNB Booking Plugin Custom Post Type Admin Class
- *
- * Responsible to creating and setting custom post types data in the RegisterCPT.php file and calling to register them for the admin panel.
+ * Custom Post Type Admin Class
  */
 class CPTAdmin 
 {
@@ -34,10 +27,9 @@ class CPTAdmin
 	public $registerCPT;
 
     /**
-	 * Call function to set custom post types and their meta fields and boxes in the RegisterCPT.php file and then register them.
+	 * Call function to set custom post types and their meta fields and boxes in the RegisterCPT.php file and then register them
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function register() 
 	{
@@ -56,10 +48,9 @@ class CPTAdmin
     }
 
     /**
-	 * Set custom post types in the RegisterCPT.php file.
+	 * Set custom post types in the RegisterCPT.php file
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
     public function setCPTs() {
         $cpts = array(
@@ -108,10 +99,9 @@ class CPTAdmin
     }
 
     /**
-	 * Set custom post types meta boxes and fields in the RegisterCPT.php file.
+	 * Set custom post types meta boxes and fields in the RegisterCPT.php file
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
     public function setCPTMetas() {
         /**

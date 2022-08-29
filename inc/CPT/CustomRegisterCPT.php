@@ -1,6 +1,8 @@
 <?php
 /**
- * CustomRegisterCPT class.
+ * CustomRegisterCPT class
+ * 
+ * Responsible to register the plugin's custom post types' functions for specific custom post types
  *
  * @package    UNBBookingPlugin\Classes
  * @since      1.0.0
@@ -10,9 +12,6 @@ namespace UnbBooking\CPTs;
 
  /**
  * UNB Booking Plugin Registering Custom Post Type Class
- *
- * Responsible to register the plugin's custom post types' functions for specific custom post types
- * 
  */
 class CustomRegisterCPT 
 {
