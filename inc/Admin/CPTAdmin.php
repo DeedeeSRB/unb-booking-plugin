@@ -3,6 +3,7 @@
  * CPTAdmin class
  * 
  * Responsible for creating and setting custom post types data in the RegisterCPT.php file and calling to register them
+ * Callbacks for the custom post types' meta boxes should be included in CPTMetaCallbacks.php file
  *
  * @package    UNBBookingPlugin\Classes
  * @since      1.0.0

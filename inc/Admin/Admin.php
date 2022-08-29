@@ -1,16 +1,12 @@
 <?php 
 /**
- * Admin class.
+ * Admin class
+ * 
+ * Responsible to create admin pages, subpages, and custom forms data and setting them in SettingsApi
+ * Callbacks for the pages and custom fields should be included in AdminCallbacks.php file
  *
- * @category   Class
- * @package    UNBBookingPlugin
- * @subpackage WordPress
- * @author     Unbelievable Digital
- * @copyright  2022 Unbelievable Digital
- * @license    https://opensource.org/licenses/GPL-3.0 GPL-3.0-only
- * @link       https://unbelievable.digital/
+ * @package    UNBBookingPlugin\Classes
  * @since      1.0.0
- * php version 7.3.9
  */
 
 namespace UnbBooking\Admin;
@@ -19,11 +15,7 @@ use UnbBooking\Api\SettingsApi;
 use UnbBooking\Callbacks\AdminCallbacks;
 
 /**
- * UNB Booking Plugin Admin Class
- *
- * Responsible to create admin pages, subpages, and custom forms data and setting them in SettingsApi.
- * Callbacks for the pages and custom fields should be included in AdminCallbacks.php file.
- * 
+ * Admin Class
  */
 class Admin
 {
@@ -39,23 +31,30 @@ class Admin
 	 * Set admin pages, subpages, and forms for the admin panel in the SettingsApi.php file and then register them.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function register() 
 	{
 		require_once UNB_PLUGIN_PATH . 'inc/Api/SettingsApi.php';
 		require_once UNB_PLUGIN_PATH . 'inc/Callbacks/AdminCallbacks.php';
 		
+		// Create new SettingsApi varaible
 		$this->settings = new SettingsApi();
 
+		// Set the admin pages
 		$this->setPages();
+		// The first admin page is called "General"
 		$this->settings->withSubPage( 'General' );
+		// Set the any admin subpages
 		$this->setSubpages();
 
+		// Set the admin settings 
 		$this->setSettings();
+		// Set the admin settings' sections
 		$this->setSections();
+		// Set the admin settings' fields
 		$this->setFields();
 
+		// Register all the variables we set
 		$this->settings->register();
 	}
 
@@ -63,7 +62,6 @@ class Admin
 	 * Setting the admin pages for the SettingsApi
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function setPages() 
 	{
@@ -86,7 +84,6 @@ class Admin
 	 * Setting the admin subpages to the subpages array
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function setSubpages() 
 	{
@@ -108,10 +105,11 @@ class Admin
 	 * Setting the admin settings in the SettingsApi.file
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function setSettings()
 	{
+		// This array will hold the settings that should be included in the admin pages
+		// NOTE: The callbacks should included in the AdminCallbacks.php file
 		$args = array(
 			array(
 				'option_group' => 'unb_booking_plugin_currency_options',
@@ -131,10 +129,11 @@ class Admin
 	 * Setting the admin sections in the SettingsApi.file
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function setSections()
 	{
+		// This array will hold the settings' sections that should be included in the admin pages
+		// NOTE: The callbacks should included in the AdminCallbacks.php file
 		$args = array(
 			array(
 				'id' => 'unb_booking_plugin_currency_section',
@@ -155,10 +154,11 @@ class Admin
 	 * Setting the admin fields in the SettingsApi.file
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function setFields()
 	{
+        // This array will hold the settings' fields that should be included in the admin pages
+		// NOTE: The callbacks should included in the AdminCallbacks.php file
 		$args = array(
 			array(
 				'id' => 'currency_type',

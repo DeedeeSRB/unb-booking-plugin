@@ -10,7 +10,7 @@
 
 namespace UnbBooking\CPTs;
 
- /**
+/**
  * Register Custom Post Types class
  */
 class RegisterCPT 
