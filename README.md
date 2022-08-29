@@ -1,44 +1,36 @@
 # Unbelievable Digital Booking System Plugin
 
-This is a wordpress plugin created to help you keep track of all your bookings in your hotel, motel, car rental, etc. It also provides Elementor widgets for you to allow your site visitors to book some of your products. All the products you add using this plugin will be added to your woocommerce products list automaticlly so you can use woocommerce built-in functions such as "add to cart". 
+This is a wordpress plugin created to help you keep track of all your bookings in your hotel, motel, car rental, etc. It also provides Elementor widgets for you to allow your site visitors to book some of your products. All the products you add using this plugin will be added to your woocommerce products list automaticlly so they will have the same functionality as a noraml woocommerce product. However, you won't be able to edit them in the woocommerce products page. 
 
-For this version of the plugin only "room" exist as a product. A "room" include the attributes "price", "maximum number of visitors", "minimum number of visitors", and "amenties". 
+For this version of the plugin, "room" and "booking" exist as products. A "room" include the attributes "price", "maximum number of visitors", "minimum number of visitors", and "amenties". A "booking" is more complicated and contains inforamtion of all the rooms that were booked in one booking and the booker information.
+The "booking" information contains: "rooms", "status", "billing details", "price", "payment method", "payment paid", "date", and the woocommerce order id.
 
-## Widgets
+## Elementor Widgets
 
-### Products widget
+### Products List
+__Widget name__: UNB Products List
 
-Rhis widget will allow you to display all your products that can be booked for your visitors to choose from.
+This widget will allow you to display a list all your products for your visitors to choose from. However, this widget won't display any information about the product except its title. You should use the specific list widget for each product (eg. rooms list). You can turn on and off the products you want to display in the widget settings.
 
-### Rooms to-be-booked widget
+### Rooms List
+__Widget name__: UNB Rooms List
 
-This widget will allow to display ALL your bookable (currently available or unavailable) rooms.
+This widget will only display the rooms you have added with all their details such as price, min booking days, max number of visitors, amenities, and any thumbnail. You can change the maximum number of rooms in the list in the widget settings (min: 1, max: 100).
 
-Options: Maximum number of rooms in the list (min: 1, max: 100)
+### Book Room Button
+__Widget name__: UNB Book Room Button
 
+This widget should only be included in a rooms page. It will display 4 input fields, the check in and check out dates, the number of visitors, and a button to book the room. A user won't be able to book a room (add it to cart)
+1) If the room is already booked
+2) If the chosen booking days is less than this room's min booking days
+3) If the chosen number of visitos is more than this room's max number of visitors
 
 ## Settings
 
-### Default settings
+### Products(Rooms) settings
 
+You can pick the default values of your products (for now just "room") in the admin settings page.
 
-You can pick the default setting of your products (for now just "room") in the admin settings page.
-
-## To be Added
-
-### Widgets
- 
-#### Room details page widget
-
-This widget will allow to display all your rooms details "price", "maximum number of visitors", "minimum number of visitors", and "amenties".
-
-#### Room search widget
-
-This widget will allow to display a search function using filters such as availavlity time and room details.
-
-
-### Settings
-
-You will be able to add your custom booking products with their own attributes using this plugin. 
+### Currency settings
 
 You can pick the default currency of your website in the plugin general page.
