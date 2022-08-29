@@ -48,7 +48,7 @@ class RegisterCPT
     public static $metaColumns = array();
     
     /**
-	 * Call a function to register custom post types, their meta boxes, and meta fields if they are not empty.
+	 * Add actions to register custom post types, their meta boxes, and meta fields if they are not empty.
 	 *
 	 * @since 1.0.0
 	 */
