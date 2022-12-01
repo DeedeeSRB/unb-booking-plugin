@@ -2,7 +2,8 @@
 *   Booking system style
 */
 .table {
-  display: table; /* Allow the centering to work */
+  display: table;
+  /* Allow the centering to work */
   margin: 0 auto;
 }
 
@@ -14,4 +15,52 @@ ul#horizontal-list {
 
 ul#horizontal-list li {
   display: inline;
+}
+
+.unb-rooms-list .unb-rooms-items {
+  position: relative;
+}
+.unb-rooms-list .unb-rooms-items a img {
+  width: 100%;
+}
+.unb-rooms-list .unb-rooms-items .unb-room-overlay {
+  padding: 40px;
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.unb-rooms-list .unb-rooms-items .unb-room-overlay .unb-room-title a {
+  color: #ffffff;
+  font-family: "Jost";
+  font-size: 50px;
+}
+.unb-rooms-list .unb-rooms-items .unb-room-overlay .unb-room-price {
+  color: #ffffff;
+  font-family: "Jost";
+  font-size: 40px;
+}
+.unb-rooms-list .unb-rooms-items .unb-room-overlay .unb-room-description {
+  color: #ffffff;
+  font-family: "Jost";
+  font-size: 14px;
+}
+.unb-rooms-list .unb-rooms-items .unb-room-overlay .unb-room-info {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  right: 40px;
+}
+.unb-rooms-list .unb-rooms-items .unb-room-overlay .unb-room-info .unb-room-max-people,
+.unb-rooms-list .unb-rooms-items .unb-room-overlay .unb-room-info .unb-room-max-booking-days,
+.unb-rooms-list .unb-rooms-items .unb-room-overlay .unb-room-info .unb-room-amenities {
+  padding-right: 10px;
+  color: #ffffff;
+  font-family: "Jost";
+  display: inline-block;
 }/*# sourceMappingURL=main.css.map */

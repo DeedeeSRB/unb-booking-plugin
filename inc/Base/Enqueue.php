@@ -45,7 +45,9 @@ class Enqueue
 		// JQueryUICore and Css
 		wp_enqueue_script('jqueryuicore', 'https://code.jquery.com/ui/1.13.2/jquery-ui.js', array('jquery') );
 		wp_enqueue_style( 'jqueryuicss', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css' );
-	 
+
+		wp_enqueue_style( 'unb_main_style', UNB_PLUGIN_URL.'/assets/css/main.css' );
+		
 		// Bootstrap
 		wp_enqueue_style( 'bootstrapstyle', UNB_PLUGIN_URL . 'assets/bootstrap-5.0.2-dist/css/bootstrap.min.css' );
 		wp_enqueue_script( 'bootstrapscript', UNB_PLUGIN_URL . 'assets/bootstrap-5.0.2-dist/js/bootstrap.min.js' );

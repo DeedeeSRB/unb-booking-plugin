@@ -45,5 +45,3 @@ require UNB_PLUGIN_PATH . 'inc/init.php';
  */
 $init = new Init();
 $init->register_services();
-
-
